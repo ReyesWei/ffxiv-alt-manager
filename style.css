@@ -106,7 +106,13 @@ main {
 }
 
 /* Add/edit dialog */
-#account-dialog {
+dialog {
+  margin: auto;
+}
+
+#account-dialog,
+#category-dialog,
+#submarine-dialog {
   border: 1px solid #2a2d3a;
   border-radius: 16px;
   background: #1a1d29;
@@ -115,7 +121,9 @@ main {
   width: min(480px, calc(100vw - 32px));
 }
 
-#account-dialog::backdrop {
+#account-dialog::backdrop,
+#category-dialog::backdrop,
+#submarine-dialog::backdrop {
   background: rgba(0, 0, 0, 0.6);
 }
 
