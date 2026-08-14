@@ -437,6 +437,7 @@ dialog {
   flex-wrap: wrap;
   gap: 8px;
   flex: 1 1 auto;
+  min-width: 0;
 }
 
 .category-pill {
@@ -483,10 +484,14 @@ dialog {
 
 .submarine-toolbar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   margin-bottom: 20px;
+}
+
+.submarine-toolbar > #open-add-submarine {
+  flex: 0 0 auto;
 }
 
 /* Submarine list */
