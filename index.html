@@ -10,9 +10,50 @@
 <header>
   <h1>FFXIV 多帳號管理</h1>
 </header>
+
+<nav class="tab-nav">
+  <button class="tab-btn is-active" data-tab="accounts">帳號到期日</button>
+  <button class="tab-btn" data-tab="submarines" disabled title="即將推出">潛水艇提醒（即將推出）</button>
+</nav>
+
 <main>
-  <p>網站建置中，功能陸續加入中。</p>
+  <section id="tab-accounts" class="tab-panel is-active">
+
+    <form id="account-form" class="card form-card">
+      <div class="field">
+        <label for="account-name">帳號名稱</label>
+        <input type="text" id="account-name" placeholder="例如：獸奶 或 email" required>
+      </div>
+
+      <div class="field">
+        <label for="account-expiry">帳號到期日</label>
+        <input type="date" id="account-expiry" required>
+      </div>
+
+      <div class="field checkbox-field">
+        <label class="checkbox-label">
+          <input type="checkbox" id="same-as-account">
+          雇員到期日同帳號到期日
+        </label>
+      </div>
+
+      <div class="field" id="employee-expiry-field">
+        <label for="employee-expiry">雇員到期日</label>
+        <input type="date" id="employee-expiry" required>
+      </div>
+
+      <button type="submit" class="btn-primary">新增帳號</button>
+    </form>
+
+    <ul id="account-list" class="account-list"></ul>
+
+  </section>
+
+  <section id="tab-submarines" class="tab-panel">
+    <p class="placeholder-text">潛水艇返航提醒功能開發中。</p>
+  </section>
 </main>
+
 <script src="script.js"></script>
 </body>
 </html>
