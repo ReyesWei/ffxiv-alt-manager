@@ -260,7 +260,8 @@ dialog {
 }
 
 .field input[type="text"],
-.field input[type="date"] {
+.field input[type="date"],
+.field input[type="number"] {
   min-height: 44px;
   padding: 0 12px;
   border-radius: 10px;
@@ -268,6 +269,18 @@ dialog {
   background: #12141c;
   color: #f0f0f5;
   font-size: 1rem;
+  width: 100%;
+}
+
+.field input[type="number"]::-webkit-outer-spin-button,
+.field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.field input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .field input:focus {
