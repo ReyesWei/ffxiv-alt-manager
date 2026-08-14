@@ -438,6 +438,9 @@ function tickCountdowns() {
       if (!notifiedIds.has(card.dataset.id)) {
         notifiedIds.add(card.dataset.id);
         playAlertSound();
+        const categoryText = card.querySelector(".category-badge")?.textContent || "";
+        const nameText = card.querySelector(".submarine-name")?.textContent || "潛水艇";
+        sendNtfyNotification("潛水艇回港提醒", `${categoryText}的${nameText}已經返航！`);
       }
     } else {
       countdownEl.textContent = formatRemaining(remaining);
@@ -545,3 +548,71 @@ submarineListEl.addEventListener("click", (e) => {
 });
 
 renderCategoryPills();
+
+/* ---------- ntfy push notifications ---------- */
+
+const NTFY_TOPIC_KEY = "ffxiv-ntfy-topic";
+
+const ntfyDialog = document.getElementById("ntfy-dialog");
+const ntfyForm = document.getElementById("ntfy-form");
+const ntfyTopicInput = document.getElementById("ntfy-topic");
+const openNtfySettingsBtn = document.getElementById("open-ntfy-settings");
+const closeNtfyDialogBtn = document.getElementById("close-ntfy-dialog");
+const regenerateTopicBtn = document.getElementById("regenerate-topic");
+const testNtfyBtn = document.getElementById("test-ntfy");
+
+function randomTopic() {
+  return "ffxiv-" + crypto.randomUUID().split("-")[0];
+}
+
+function sendNtfyNotification(title, message) {
+  const topic = localStorage.getItem(NTFY_TOPIC_KEY);
+  if (!topic) return;
+  fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
+    method: "POST",
+    body: message,
+    headers: {
+      "Title": title,
+      "Tags": "ship",
+    },
+  }).catch(() => {});
+}
+
+openNtfySettingsBtn.addEventListener("click", () => {
+  ntfyTopicInput.value = localStorage.getItem(NTFY_TOPIC_KEY) || randomTopic();
+  ntfyDialog.showModal();
+});
+
+closeNtfyDialogBtn.addEventListener("click", () => {
+  ntfyDialog.close();
+});
+
+regenerateTopicBtn.addEventListener("click", () => {
+  ntfyTopicInput.value = randomTopic();
+});
+
+testNtfyBtn.addEventListener("click", () => {
+  const topic = ntfyTopicInput.value.trim();
+  if (!topic) {
+    alert("請先輸入頻道名稱");
+    return;
+  }
+  fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
+    method: "POST",
+    body: "這是一則測試通知，設定成功！",
+    headers: { "Title": "FFXIV 潛水艇提醒測試" },
+  })
+    .then(() => alert("測試通知已送出，看看手機有沒有收到"))
+    .catch(() => alert("發送失敗，請檢查網路連線"));
+});
+
+ntfyForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const topic = ntfyTopicInput.value.trim();
+  if (topic) {
+    localStorage.setItem(NTFY_TOPIC_KEY, topic);
+  } else {
+    localStorage.removeItem(NTFY_TOPIC_KEY);
+  }
+  ntfyDialog.close();
+});

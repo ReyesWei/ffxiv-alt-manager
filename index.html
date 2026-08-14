@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 <header>
-  <h1>FFXIV 多帳號管理</h1>
+  <div class="header-inner">
+    <h1>FFXIV 多帳號管理</h1>
+    <button type="button" id="open-ntfy-settings" class="btn-icon">🔔 推播設定</button>
+  </div>
 </header>
 
 <div class="layout">
@@ -101,6 +104,33 @@
   </form>
 </dialog>
 
-<script src="script.js?v=6"></script>
+<dialog id="ntfy-dialog">
+  <form id="ntfy-form" class="form-card">
+    <div class="dialog-header">
+      <h2>推播通知設定</h2>
+      <button type="button" id="close-ntfy-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <p class="field-hint">
+      潛水艇回港時，除了網頁內的音效提醒，也會推播到手機。<br>
+      手機請先安裝「ntfy」App（App Store / Google Play 搜尋 ntfy），打開 App 訂閱下面這個頻道名稱即可。
+    </p>
+
+    <div class="field">
+      <label for="ntfy-topic">頻道名稱</label>
+      <input type="text" id="ntfy-topic" placeholder="例如 ffxiv-a1b2c3d4">
+      <p class="field-hint">頻道是公開的，建議用隨機產生的名稱，不要取容易被別人猜到的字，避免收到陌生訊息。清空並儲存可以關閉推播。</p>
+    </div>
+
+    <button type="button" id="regenerate-topic" class="btn-icon btn-block">🎲 產生隨機頻道名稱</button>
+
+    <div class="dialog-actions">
+      <button type="button" id="test-ntfy" class="btn-icon">發送測試通知</button>
+      <button type="submit" class="btn-primary">儲存</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="script.js?v=7"></script>
 </body>
 </html>

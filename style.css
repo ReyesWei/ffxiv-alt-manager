@@ -12,9 +12,18 @@ body {
 }
 
 header {
-  padding: 20px 16px;
-  text-align: center;
+  padding: 16px;
   border-bottom: 1px solid #2a2d3a;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 header h1 {
@@ -144,7 +153,8 @@ dialog {
 
 #account-dialog,
 #category-dialog,
-#submarine-dialog {
+#submarine-dialog,
+#ntfy-dialog {
   border: 1px solid #2a2d3a;
   border-radius: 16px;
   background: #1a1d29;
@@ -155,8 +165,22 @@ dialog {
 
 #account-dialog::backdrop,
 #category-dialog::backdrop,
-#submarine-dialog::backdrop {
+#submarine-dialog::backdrop,
+#ntfy-dialog::backdrop {
   background: rgba(0, 0, 0, 0.6);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.dialog-actions .btn-icon {
+  flex: 1;
+}
+
+.dialog-actions .btn-primary {
+  flex: 1;
 }
 
 .dialog-header {
