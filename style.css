@@ -340,11 +340,11 @@ dialog {
 }
 
 .category-pill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   min-height: 40px;
-  padding: 0 14px;
+  padding: 0 10px 0 16px;
   border-radius: 20px;
   border: 1px solid #3a3f55;
   background: #1a1d29;
@@ -365,16 +365,20 @@ dialog {
 }
 
 .category-pill .remove-category {
-  width: 24px;
-  height: 24px;
-  margin: 0 -6px 0 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: none;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.18);
   color: inherit;
-  font-size: 0.75rem;
-  cursor: pointer;
+  font-size: 0.7rem;
   line-height: 1;
+  cursor: pointer;
+  padding: 0;
 }
 
 .submarine-toolbar {

@@ -265,6 +265,16 @@ function parseDurationCode(code) {
   return (days * 24 * 60 + hours * 60 + minutes) * 60000;
 }
 
+function indexToLetter(n) {
+  let label = "";
+  while (n > 0) {
+    const rem = (n - 1) % 26;
+    label = String.fromCharCode(65 + rem) + label;
+    n = Math.floor((n - 1) / 26);
+  }
+  return label;
+}
+
 function formatClock(ts) {
   const d = new Date(ts);
   const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -353,7 +363,7 @@ function renderSubmarines() {
       <div class="submarine-card-header">
         <div class="submarine-title">
           <span class="category-badge">${escapeHtml(categoryNameById(sub.categoryId))}</span>
-          <span class="submarine-name">潛水艇 ${index}</span>
+          <span class="submarine-name">潛水艇 ${indexToLetter(index)}</span>
         </div>
         <span class="submarine-status">探索中</span>
       </div>
