@@ -4,13 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 <header>
   <div class="header-inner">
     <h1>FFXIV 多帳號管理</h1>
-    <button type="button" id="open-ntfy-settings" class="btn-icon">🔔 推播設定</button>
+    <div class="header-actions">
+      <button type="button" id="open-ntfy-settings" class="btn-icon">🔔 推播設定</button>
+      <button type="button" id="open-data-info" class="btn-icon">❓ 資料保存說明</button>
+      <button type="button" id="open-log" class="btn-icon">🪵 Log</button>
+    </div>
   </div>
 </header>
 
@@ -137,6 +141,47 @@
   </form>
 </dialog>
 
-<script src="script.js?v=9"></script>
+<dialog id="data-info-dialog">
+  <div class="form-card">
+    <div class="dialog-header">
+      <h2>資料保存說明</h2>
+      <button type="button" id="close-data-info-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="info-text">
+      <p>這個網站的資料（帳號到期日、潛水艇、推播設定）都只存在<b>這個瀏覽器裡面</b>，沒有雲端同步，以下情況資料會不見：</p>
+      <ul>
+        <li>換一個瀏覽器（例如 Chrome 換 Safari）</li>
+        <li>換一台手機或電腦</li>
+        <li>手動清除瀏覽器的「Cookie 與網站資料」或「瀏覽資料」</li>
+        <li>使用無痕視窗，關閉分頁後資料就消失</li>
+        <li>iPhone Safari：超過 7 天沒有打開這個網站，系統可能會自動清除（Chrome 沒有這個限制）</li>
+      </ul>
+      <p>單純的「重新整理頁面」「關掉分頁再打開」「重開機」都不會遺失資料，可以放心。</p>
+    </div>
+
+    <button type="button" id="close-data-info-dialog-2" class="btn-primary">知道了</button>
+  </div>
+</dialog>
+
+<dialog id="log-dialog">
+  <div class="form-card">
+    <div class="dialog-header">
+      <h2>系統 Log</h2>
+      <button type="button" id="close-log-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <p class="field-hint">記錄提醒音效／推播觸發的時間點，方便回報問題時比對。</p>
+
+    <div id="log-list" class="log-list"></div>
+
+    <div class="dialog-actions">
+      <button type="button" id="clear-log" class="btn-icon">清除紀錄</button>
+      <button type="button" id="close-log-dialog-2" class="btn-primary">關閉</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="script.js?v=10"></script>
 </body>
 </html>

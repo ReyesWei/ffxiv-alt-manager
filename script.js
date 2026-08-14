@@ -238,6 +238,22 @@ const submarineListEl = document.getElementById("submarine-list");
 let selectedCategoryId = ALL_CATEGORIES;
 const notifiedIds = new Set();
 
+// Submarines that already expired before this page load should not
+// re-trigger the arrival sound/notification just because the page reloaded.
+(function suppressStaleArrivals() {
+  const now = Date.now();
+  let staleCount = 0;
+  for (const sub of loadSubmarines()) {
+    if (sub.returnAt <= now) {
+      notifiedIds.add(sub.id);
+      staleCount++;
+    }
+  }
+  if (staleCount > 0) {
+    addLog(`載入時略過 ${staleCount} 筆已過期的潛水艇資料，不重複播放提醒`);
+  }
+})();
+
 function loadCategories() {
   const raw = localStorage.getItem(CATEGORY_KEY);
   return raw ? JSON.parse(raw) : [];
@@ -453,6 +469,7 @@ function tickCountdowns() {
         const categoryText = card.querySelector(".category-badge")?.textContent || "";
         const nameText = card.querySelector(".submarine-name")?.textContent || "潛水艇";
         sendNtfyNotification("潛水艇回港提醒", `${categoryText}的${nameText}已經返航！`);
+        addLog(`播放提醒音效：${categoryText} 的 ${nameText}（回港時間 ${formatClock(returnAt)}）`);
       }
     } else {
       countdownEl.textContent = formatRemaining(remaining);
@@ -632,3 +649,78 @@ ntfyForm.addEventListener("submit", (e) => {
   }
   ntfyDialog.close();
 });
+
+/* ---------- Debug log ---------- */
+
+const LOG_KEY = "ffxiv-debug-log";
+const MAX_LOG_ENTRIES = 200;
+
+const logDialog = document.getElementById("log-dialog");
+const logListEl = document.getElementById("log-list");
+const openLogBtn = document.getElementById("open-log");
+const closeLogDialogBtn = document.getElementById("close-log-dialog");
+const closeLogDialogBtn2 = document.getElementById("close-log-dialog-2");
+const clearLogBtn = document.getElementById("clear-log");
+
+function loadLogs() {
+  const raw = localStorage.getItem(LOG_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function addLog(message) {
+  const logs = loadLogs();
+  logs.push({ time: Date.now(), message });
+  while (logs.length > MAX_LOG_ENTRIES) logs.shift();
+  localStorage.setItem(LOG_KEY, JSON.stringify(logs));
+}
+
+function formatLogTime(ts) {
+  const d = new Date(ts);
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mi = String(d.getMinutes()).padStart(2, "0");
+  const ss = String(d.getSeconds()).padStart(2, "0");
+  return `${mm}/${dd} ${hh}:${mi}:${ss}`;
+}
+
+function renderLogs() {
+  const logs = [...loadLogs()].reverse();
+  if (logs.length === 0) {
+    logListEl.innerHTML = '<p class="empty-state">還沒有紀錄</p>';
+    return;
+  }
+  logListEl.innerHTML = logs
+    .map(
+      (entry) =>
+        `<div class="log-entry"><span class="log-time">${formatLogTime(entry.time)}</span>${escapeHtml(entry.message)}</div>`
+    )
+    .join("");
+}
+
+openLogBtn.addEventListener("click", () => {
+  renderLogs();
+  logDialog.showModal();
+});
+
+closeLogDialogBtn.addEventListener("click", () => logDialog.close());
+closeLogDialogBtn2.addEventListener("click", () => logDialog.close());
+
+clearLogBtn.addEventListener("click", () => {
+  if (!confirm("確定要清除所有 Log 紀錄嗎？")) return;
+  localStorage.removeItem(LOG_KEY);
+  renderLogs();
+});
+
+/* ---------- Data info dialog ---------- */
+
+const dataInfoDialog = document.getElementById("data-info-dialog");
+const openDataInfoBtn = document.getElementById("open-data-info");
+const closeDataInfoDialogBtn = document.getElementById("close-data-info-dialog");
+const closeDataInfoDialogBtn2 = document.getElementById("close-data-info-dialog-2");
+
+openDataInfoBtn.addEventListener("click", () => dataInfoDialog.showModal());
+closeDataInfoDialogBtn.addEventListener("click", () => dataInfoDialog.close());
+closeDataInfoDialogBtn2.addEventListener("click", () => dataInfoDialog.close());
+
+addLog("網頁載入");

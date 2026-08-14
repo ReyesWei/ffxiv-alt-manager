@@ -30,6 +30,12 @@ header h1 {
   font-size: 1.3rem;
 }
 
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 /* Layout */
 .layout {
   display: flex;
@@ -154,7 +160,9 @@ dialog {
 #account-dialog,
 #category-dialog,
 #submarine-dialog,
-#ntfy-dialog {
+#ntfy-dialog,
+#data-info-dialog,
+#log-dialog {
   border: 1px solid #2a2d3a;
   border-radius: 16px;
   background: #1a1d29;
@@ -166,8 +174,54 @@ dialog {
 #account-dialog::backdrop,
 #category-dialog::backdrop,
 #submarine-dialog::backdrop,
-#ntfy-dialog::backdrop {
+#ntfy-dialog::backdrop,
+#data-info-dialog::backdrop,
+#log-dialog::backdrop {
   background: rgba(0, 0, 0, 0.6);
+}
+
+.info-text {
+  font-size: 0.9rem;
+  color: #c4c6d4;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-text ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.log-list {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #12141c;
+  border: 1px solid #2a2d3a;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.log-entry {
+  font-size: 0.82rem;
+  color: #c4c6d4;
+  border-bottom: 1px solid #2a2d3a;
+  padding-bottom: 6px;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.log-entry .log-time {
+  color: #9a9db0;
+  margin-right: 6px;
 }
 
 .dialog-actions {
