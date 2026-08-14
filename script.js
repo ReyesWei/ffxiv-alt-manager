@@ -585,7 +585,12 @@ function sendNtfyNotification(title, message) {
 }
 
 openNtfySettingsBtn.addEventListener("click", () => {
-  ntfyTopicInput.value = localStorage.getItem(NTFY_TOPIC_KEY) || randomTopic();
+  let topic = localStorage.getItem(NTFY_TOPIC_KEY);
+  if (!topic) {
+    topic = randomTopic();
+    localStorage.setItem(NTFY_TOPIC_KEY, topic);
+  }
+  ntfyTopicInput.value = topic;
   ntfyDialog.showModal();
 });
 
