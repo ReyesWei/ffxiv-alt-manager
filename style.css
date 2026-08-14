@@ -279,3 +279,99 @@ main {
   color: #9a9db0;
   padding: 24px 0;
 }
+
+.field-hint {
+  font-size: 0.82rem;
+  color: #9a9db0;
+  line-height: 1.5;
+}
+
+/* Category pills */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.category-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 8px 0 14px;
+  border-radius: 20px;
+  border: 1px solid #3a3f55;
+  background: #1a1d29;
+  color: #c4c6d4;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.category-pill.is-active {
+  background: #5b8def;
+  border-color: #5b8def;
+  color: #fff;
+}
+
+.category-pill .remove-category {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.section-toolbar h3 {
+  font-size: 1rem;
+  color: #c4c6d4;
+}
+
+/* Submarine list */
+.submarine-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.submarine-card {
+  background: #1a1d29;
+  border: 1px solid #2a2d3a;
+  border-left: 4px solid #5b8def;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.submarine-card.is-arrived {
+  border-left-color: #4ad07a;
+}
+
+.submarine-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.submarine-label {
+  font-size: 0.9rem;
+  color: #9a9db0;
+}
+
+.submarine-countdown {
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.submarine-card.is-arrived .submarine-countdown {
+  color: #4ad07a;
+}

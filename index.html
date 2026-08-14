@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <header>
@@ -13,7 +13,7 @@
 
 <nav class="tab-nav">
   <button class="tab-btn is-active" data-tab="accounts">帳號到期日</button>
-  <button class="tab-btn" data-tab="submarines" disabled title="即將推出">潛水艇提醒（即將推出）</button>
+  <button class="tab-btn" data-tab="submarines">潛水艇提醒</button>
 </nav>
 
 <main>
@@ -29,7 +29,21 @@
   </section>
 
   <section id="tab-submarines" class="tab-panel">
-    <p class="placeholder-text">潛水艇返航提醒功能開發中。</p>
+
+    <div class="section-toolbar">
+      <h2>角色分類</h2>
+      <button type="button" id="open-add-category" class="btn-primary btn-add">＋ 新增分類</button>
+    </div>
+
+    <div id="category-pills" class="category-pills"></div>
+
+    <div class="section-toolbar">
+      <h3 id="current-category-label">請先新增分類</h3>
+      <button type="button" id="open-add-submarine" class="btn-primary btn-add" disabled>＋ 手動新增</button>
+    </div>
+
+    <ul id="submarine-list" class="submarine-list"></ul>
+
   </section>
 </main>
 
@@ -66,6 +80,39 @@
   </form>
 </dialog>
 
-<script src="script.js?v=2"></script>
+<dialog id="category-dialog">
+  <form id="category-form" class="form-card">
+    <div class="dialog-header">
+      <h2>新增分類</h2>
+      <button type="button" id="close-category-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="category-name">角色名稱</label>
+      <input type="text" id="category-name" placeholder="例如：小號A" required>
+    </div>
+
+    <button type="submit" class="btn-primary">新增分類</button>
+  </form>
+</dialog>
+
+<dialog id="submarine-dialog">
+  <form id="submarine-form" class="form-card">
+    <div class="dialog-header">
+      <h2>新增潛水艇倒數</h2>
+      <button type="button" id="close-submarine-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="submarine-duration">剩餘時間</label>
+      <input type="text" inputmode="numeric" pattern="[0-9]*" id="submarine-duration" placeholder="例如 012005" required>
+      <p class="field-hint">2碼＝分鐘（45＝45分）<br>4碼＝時分（1950＝19時50分）<br>6碼＝日時分（012005＝1日20時05分）</p>
+    </div>
+
+    <button type="submit" class="btn-primary">開始倒數</button>
+  </form>
+</dialog>
+
+<script src="script.js?v=3"></script>
 </body>
 </html>
