@@ -1,3 +1,20 @@
+/* ---------- Debug log (defined first: used during early startup checks) ---------- */
+
+const LOG_KEY = "ffxiv-debug-log";
+const MAX_LOG_ENTRIES = 200;
+
+function loadLogs() {
+  const raw = localStorage.getItem(LOG_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function addLog(message) {
+  const logs = loadLogs();
+  logs.push({ time: Date.now(), message });
+  while (logs.length > MAX_LOG_ENTRIES) logs.shift();
+  localStorage.setItem(LOG_KEY, JSON.stringify(logs));
+}
+
 const STORAGE_KEY = "ffxiv-accounts";
 
 const form = document.getElementById("account-form");
@@ -652,27 +669,12 @@ ntfyForm.addEventListener("submit", (e) => {
 
 /* ---------- Debug log ---------- */
 
-const LOG_KEY = "ffxiv-debug-log";
-const MAX_LOG_ENTRIES = 200;
-
 const logDialog = document.getElementById("log-dialog");
 const logListEl = document.getElementById("log-list");
 const openLogBtn = document.getElementById("open-log");
 const closeLogDialogBtn = document.getElementById("close-log-dialog");
 const closeLogDialogBtn2 = document.getElementById("close-log-dialog-2");
 const clearLogBtn = document.getElementById("clear-log");
-
-function loadLogs() {
-  const raw = localStorage.getItem(LOG_KEY);
-  return raw ? JSON.parse(raw) : [];
-}
-
-function addLog(message) {
-  const logs = loadLogs();
-  logs.push({ time: Date.now(), message });
-  while (logs.length > MAX_LOG_ENTRIES) logs.shift();
-  localStorage.setItem(LOG_KEY, JSON.stringify(logs));
-}
 
 function formatLogTime(ts) {
   const d = new Date(ts);
