@@ -73,6 +73,24 @@ main {
   text-align: center;
 }
 
+/* Section toolbar */
+.section-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-toolbar h2 {
+  font-size: 1.1rem;
+}
+
+.btn-add {
+  padding: 0 18px;
+  white-space: nowrap;
+}
+
 /* Card / form */
 .card {
   background: #1a1d29;
@@ -85,7 +103,31 @@ main {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-bottom: 20px;
+}
+
+/* Add/edit dialog */
+#account-dialog {
+  border: 1px solid #2a2d3a;
+  border-radius: 16px;
+  background: #1a1d29;
+  color: #f0f0f5;
+  padding: 20px;
+  width: min(480px, calc(100vw - 32px));
+}
+
+#account-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.dialog-header h2 {
+  font-size: 1.1rem;
 }
 
 .field {

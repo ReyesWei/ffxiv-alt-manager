@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=1">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <header>
@@ -19,31 +19,10 @@
 <main>
   <section id="tab-accounts" class="tab-panel is-active">
 
-    <form id="account-form" class="card form-card">
-      <div class="field">
-        <label for="account-name">帳號名稱</label>
-        <input type="text" id="account-name" placeholder="例如：獸奶 或 email" required>
-      </div>
-
-      <div class="field">
-        <label for="account-expiry">帳號到期日</label>
-        <input type="date" id="account-expiry" required>
-      </div>
-
-      <div class="field checkbox-field">
-        <label class="checkbox-label">
-          <input type="checkbox" id="same-as-account">
-          雇員到期日同帳號到期日
-        </label>
-      </div>
-
-      <div class="field" id="employee-expiry-field">
-        <label for="employee-expiry">雇員到期日</label>
-        <input type="date" id="employee-expiry" required>
-      </div>
-
-      <button type="submit" class="btn-primary">新增帳號</button>
-    </form>
+    <div class="section-toolbar">
+      <h2>帳號一覽</h2>
+      <button type="button" id="open-add-account" class="btn-primary btn-add">＋ 新增帳號</button>
+    </div>
 
     <ul id="account-list" class="account-list"></ul>
 
@@ -54,6 +33,39 @@
   </section>
 </main>
 
-<script src="script.js?v=1"></script>
+<dialog id="account-dialog">
+  <form id="account-form" class="form-card">
+    <div class="dialog-header">
+      <h2 id="dialog-title">新增帳號</h2>
+      <button type="button" id="close-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="account-name">帳號名稱</label>
+      <input type="text" id="account-name" placeholder="例如：獸奶 或 email" required>
+    </div>
+
+    <div class="field">
+      <label for="account-expiry">帳號到期日</label>
+      <input type="date" id="account-expiry" min="2020-01-01" max="2099-12-31" required>
+    </div>
+
+    <div class="field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="same-as-account">
+        雇員到期日同帳號到期日
+      </label>
+    </div>
+
+    <div class="field" id="employee-expiry-field">
+      <label for="employee-expiry">雇員到期日</label>
+      <input type="date" id="employee-expiry" min="2020-01-01" max="2099-12-31" required>
+    </div>
+
+    <button type="submit" class="btn-primary">新增帳號</button>
+  </form>
+</dialog>
+
+<script src="script.js?v=2"></script>
 </body>
 </html>

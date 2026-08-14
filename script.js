@@ -7,6 +7,10 @@ const sameAsAccountCheckbox = document.getElementById("same-as-account");
 const employeeExpiryField = document.getElementById("employee-expiry-field");
 const employeeExpiryInput = document.getElementById("employee-expiry");
 const accountList = document.getElementById("account-list");
+const accountDialog = document.getElementById("account-dialog");
+const dialogTitle = document.getElementById("dialog-title");
+const openAddAccountBtn = document.getElementById("open-add-account");
+const closeDialogBtn = document.getElementById("close-dialog");
 
 let editingId = null;
 
@@ -93,8 +97,18 @@ function resetForm() {
   form.reset();
   employeeExpiryField.classList.remove("is-hidden");
   editingId = null;
+  dialogTitle.textContent = "新增帳號";
   form.querySelector(".btn-primary").textContent = "新增帳號";
 }
+
+openAddAccountBtn.addEventListener("click", () => {
+  resetForm();
+  accountDialog.showModal();
+});
+
+closeDialogBtn.addEventListener("click", () => {
+  accountDialog.close();
+});
 
 sameAsAccountCheckbox.addEventListener("change", () => {
   if (sameAsAccountCheckbox.checked) {
@@ -139,6 +153,7 @@ form.addEventListener("submit", (e) => {
   }
 
   saveAccounts(accounts);
+  accountDialog.close();
   resetForm();
   renderAccounts();
 });
@@ -166,8 +181,9 @@ accountList.addEventListener("click", (e) => {
     sameAsAccountCheckbox.checked = isSame;
     employeeExpiryInput.value = acc.employeeExpiry;
     employeeExpiryField.classList.toggle("is-hidden", isSame);
+    dialogTitle.textContent = "編輯帳號";
     form.querySelector(".btn-primary").textContent = "儲存變更";
-    form.scrollIntoView({ behavior: "smooth" });
+    accountDialog.showModal();
   }
 });
 
