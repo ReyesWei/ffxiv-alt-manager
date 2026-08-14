@@ -116,6 +116,18 @@ closeDialogBtn.addEventListener("click", () => {
   accountDialog.close();
 });
 
+document.querySelectorAll(".date-picker-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const input = document.getElementById(btn.dataset.target);
+    if (!input) return;
+    if (typeof input.showPicker === "function") {
+      input.showPicker();
+    } else {
+      input.focus();
+    }
+  });
+});
+
 sameAsAccountCheckbox.addEventListener("change", () => {
   if (sameAsAccountCheckbox.checked) {
     employeeExpiryInput.value = accountExpiryInput.value;
@@ -568,14 +580,8 @@ function randomTopic() {
 function sendNtfyNotification(title, message) {
   const topic = localStorage.getItem(NTFY_TOPIC_KEY);
   if (!topic) return;
-  fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
-    method: "POST",
-    body: message,
-    headers: {
-      "Title": title,
-      "Tags": "ship",
-    },
-  }).catch(() => {});
+  const url = `https://ntfy.sh/${encodeURIComponent(topic)}?title=${encodeURIComponent(title)}&tags=ship`;
+  fetch(url, { method: "POST", body: message }).catch(() => {});
 }
 
 openNtfySettingsBtn.addEventListener("click", () => {
@@ -597,13 +603,18 @@ testNtfyBtn.addEventListener("click", () => {
     alert("請先輸入頻道名稱");
     return;
   }
-  fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
-    method: "POST",
-    body: "這是一則測試通知，設定成功！",
-    headers: { "Title": "FFXIV 潛水艇提醒測試" },
-  })
-    .then(() => alert("測試通知已送出，看看手機有沒有收到"))
-    .catch(() => alert("發送失敗，請檢查網路連線"));
+  const url = `https://ntfy.sh/${encodeURIComponent(topic)}?title=${encodeURIComponent("FFXIV 潛水艇提醒測試")}`;
+  fetch(url, { method: "POST", body: "這是一則測試通知，設定成功！" })
+    .then((res) => {
+      if (res.ok) {
+        alert("測試通知已送出，看看手機有沒有收到");
+      } else {
+        alert(`發送失敗（伺服器回應 ${res.status}），請確認頻道名稱只用英數字和連字號`);
+      }
+    })
+    .catch((err) => {
+      alert(`發送失敗：${err.message || "網路連線問題"}`);
+    });
 });
 
 ntfyForm.addEventListener("submit", (e) => {

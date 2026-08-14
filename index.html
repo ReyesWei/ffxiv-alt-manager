@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 <header>
@@ -52,7 +52,10 @@
 
     <div class="field">
       <label for="account-expiry">帳號到期日</label>
-      <input type="date" id="account-expiry" min="2020-01-01" max="2099-12-31" required>
+      <div class="date-input-row">
+        <input type="date" id="account-expiry" min="2020-01-01" max="2099-12-31" required>
+        <button type="button" class="btn-icon date-picker-btn" data-target="account-expiry" aria-label="選擇日期">📅</button>
+      </div>
     </div>
 
     <div class="field checkbox-field">
@@ -64,7 +67,10 @@
 
     <div class="field" id="employee-expiry-field">
       <label for="employee-expiry">雇員到期日</label>
-      <input type="date" id="employee-expiry" min="2020-01-01" max="2099-12-31" required>
+      <div class="date-input-row">
+        <input type="date" id="employee-expiry" min="2020-01-01" max="2099-12-31" required>
+        <button type="button" class="btn-icon date-picker-btn" data-target="employee-expiry" aria-label="選擇日期">📅</button>
+      </div>
     </div>
 
     <button type="submit" class="btn-primary">新增帳號</button>
@@ -131,6 +137,6 @@
   </form>
 </dialog>
 
-<script src="script.js?v=7"></script>
+<script src="script.js?v=8"></script>
 </body>
 </html>

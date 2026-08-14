@@ -220,6 +220,22 @@ dialog {
   outline: 2px solid #5b8def;
 }
 
+.date-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.date-input-row input[type="date"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.date-picker-btn {
+  flex-shrink: 0;
+  min-height: 44px;
+  font-size: 1.1rem;
+}
+
 .checkbox-field {
   flex-direction: row;
   align-items: center;
