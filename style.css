@@ -281,9 +281,15 @@ dialog {
 .account-dates {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
   font-size: 0.9rem;
   color: #c4c6d4;
+}
+
+.date-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .account-dates .days-left {

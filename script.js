@@ -81,8 +81,14 @@ function renderAccounts() {
         <span class="account-name">${escapeHtml(acc.name)}</span>
       </div>
       <div class="account-dates">
-        <div>帳號到期日：${formatDate(acc.accountExpiry)}（<span class="days-left">${formatDaysLabel(accDays)}</span>）</div>
-        <div>雇員到期日：${formatDate(acc.employeeExpiry)}（<span class="days-left">${formatDaysLabel(empDays)}</span>）</div>
+        <div class="date-line">
+          <span>帳號到期日：${formatDate(acc.accountExpiry)}</span>
+          <span class="days-left">（${formatDaysLabel(accDays)}）</span>
+        </div>
+        <div class="date-line">
+          <span>雇員到期日：${formatDate(acc.employeeExpiry)}</span>
+          <span class="days-left">（${formatDaysLabel(empDays)}）</span>
+        </div>
       </div>
       <div class="account-actions">
         <button class="btn-icon" data-action="edit" data-id="${acc.id}">編輯</button>
