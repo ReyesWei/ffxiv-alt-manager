@@ -19,6 +19,7 @@ const STORAGE_KEY = "ffxiv-accounts";
 
 const form = document.getElementById("account-form");
 const nameInput = document.getElementById("account-name");
+const crystalInput = document.getElementById("account-crystal");
 const accountExpiryInput = document.getElementById("account-expiry");
 const sameAsAccountCheckbox = document.getElementById("same-as-account");
 const employeeExpiryField = document.getElementById("employee-expiry-field");
@@ -96,6 +97,7 @@ function renderAccounts() {
     li.innerHTML = `
       <div class="account-card-header">
         <span class="account-name">${escapeHtml(acc.name)}</span>
+        <span class="crystal-badge">💎 ${(acc.crystal ?? 0).toLocaleString()}</span>
       </div>
       <div class="account-dates">
         <div class="date-line">
@@ -164,6 +166,7 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const name = nameInput.value.trim();
+  const crystal = crystalInput.value === "" ? 0 : Math.max(0, Math.floor(Number(crystalInput.value)));
   const accountExpiry = accountExpiryInput.value;
   const employeeExpiry = sameAsAccountCheckbox.checked
     ? accountExpiry
@@ -176,12 +179,13 @@ form.addEventListener("submit", (e) => {
   if (editingId) {
     const idx = accounts.findIndex((a) => a.id === editingId);
     if (idx !== -1) {
-      accounts[idx] = { ...accounts[idx], name, accountExpiry, employeeExpiry };
+      accounts[idx] = { ...accounts[idx], name, crystal, accountExpiry, employeeExpiry };
     }
   } else {
     accounts.push({
       id: crypto.randomUUID(),
       name,
+      crystal,
       accountExpiry,
       employeeExpiry,
     });
@@ -211,6 +215,7 @@ accountList.addEventListener("click", (e) => {
     if (!acc) return;
     editingId = id;
     nameInput.value = acc.name;
+    crystalInput.value = acc.crystal ?? 0;
     accountExpiryInput.value = acc.accountExpiry;
     const isSame = acc.accountExpiry === acc.employeeExpiry;
     sameAsAccountCheckbox.checked = isSame;

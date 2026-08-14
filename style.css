@@ -365,6 +365,16 @@ dialog {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+}
+
+.crystal-badge {
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(94, 200, 240, 0.15);
+  color: #7fd4f0;
+  white-space: nowrap;
 }
 
 .account-name {
