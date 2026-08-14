@@ -48,6 +48,12 @@ function formatDate(dateStr) {
   return `${y}/${m}/${d}`;
 }
 
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 function renderAccounts() {
   const accounts = loadAccounts();
   accountList.innerHTML = "";
@@ -85,12 +91,6 @@ function renderAccounts() {
     `;
     accountList.appendChild(li);
   }
-}
-
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
 }
 
 function resetForm() {
@@ -187,15 +187,13 @@ accountList.addEventListener("click", (e) => {
   }
 });
 
-// Tab navigation
-document.querySelectorAll(".tab-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    if (btn.disabled) return;
-    document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("is-active"));
-    document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("is-active"));
-    btn.classList.add("is-active");
-    document.getElementById(`tab-${btn.dataset.tab}`).classList.add("is-active");
-  });
+// Sidebar accordion
+const accordionToggle = document.getElementById("accounts-accordion-toggle");
+const accordionBody = document.getElementById("accounts-accordion-body");
+
+accordionToggle.addEventListener("click", () => {
+  const isOpen = accordionToggle.classList.toggle("is-open");
+  accordionBody.classList.toggle("is-collapsed", !isOpen);
 });
 
 renderAccounts();
@@ -204,14 +202,13 @@ renderAccounts();
 
 const CATEGORY_KEY = "ffxiv-sub-categories";
 const SUBMARINE_KEY = "ffxiv-submarines";
+const ALL_CATEGORIES = "__all__";
 
 const categoryDialog = document.getElementById("category-dialog");
 const categoryForm = document.getElementById("category-form");
 const categoryNameInput = document.getElementById("category-name");
-const openAddCategoryBtn = document.getElementById("open-add-category");
 const closeCategoryDialogBtn = document.getElementById("close-category-dialog");
 const categoryPillsEl = document.getElementById("category-pills");
-const currentCategoryLabel = document.getElementById("current-category-label");
 
 const submarineDialog = document.getElementById("submarine-dialog");
 const submarineForm = document.getElementById("submarine-form");
@@ -220,7 +217,7 @@ const openAddSubmarineBtn = document.getElementById("open-add-submarine");
 const closeSubmarineDialogBtn = document.getElementById("close-submarine-dialog");
 const submarineListEl = document.getElementById("submarine-list");
 
-let selectedCategoryId = null;
+let selectedCategoryId = ALL_CATEGORIES;
 const notifiedIds = new Set();
 
 function loadCategories() {
@@ -239,6 +236,11 @@ function loadSubmarines() {
 
 function saveSubmarines(submarines) {
   localStorage.setItem(SUBMARINE_KEY, JSON.stringify(submarines));
+}
+
+function categoryNameById(id) {
+  const cat = loadCategories().find((c) => c.id === id);
+  return cat ? cat.name : "未分類";
 }
 
 function parseDurationCode(code) {
@@ -263,35 +265,13 @@ function parseDurationCode(code) {
   return (days * 24 * 60 + hours * 60 + minutes) * 60000;
 }
 
-function renderCategoryPills() {
-  const categories = loadCategories();
-  categoryPillsEl.innerHTML = "";
-
-  if (categories.length === 0) {
-    selectedCategoryId = null;
-    currentCategoryLabel.textContent = "請先新增分類";
-    openAddSubmarineBtn.disabled = true;
-    renderSubmarines();
-    return;
-  }
-
-  if (!categories.some((c) => c.id === selectedCategoryId)) {
-    selectedCategoryId = categories[0].id;
-  }
-
-  for (const cat of categories) {
-    const pill = document.createElement("button");
-    pill.type = "button";
-    pill.className = `category-pill ${cat.id === selectedCategoryId ? "is-active" : ""}`.trim();
-    pill.dataset.id = cat.id;
-    pill.innerHTML = `<span>${escapeHtml(cat.name)}</span><span class="remove-category" data-remove-id="${cat.id}">✕</span>`;
-    categoryPillsEl.appendChild(pill);
-  }
-
-  const selected = categories.find((c) => c.id === selectedCategoryId);
-  currentCategoryLabel.textContent = `${selected.name} 的潛水艇`;
-  openAddSubmarineBtn.disabled = false;
-  renderSubmarines();
+function formatClock(ts) {
+  const d = new Date(ts);
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mi = String(d.getMinutes()).padStart(2, "0");
+  return `${mm}/${dd} ${hh}:${mi}`;
 }
 
 function formatRemaining(ms) {
@@ -308,50 +288,100 @@ function formatRemaining(ms) {
   return label;
 }
 
+function renderCategoryPills() {
+  const categories = loadCategories();
+  categoryPillsEl.innerHTML = "";
+
+  const allPill = document.createElement("button");
+  allPill.type = "button";
+  allPill.className = `category-pill ${selectedCategoryId === ALL_CATEGORIES ? "is-active" : ""}`.trim();
+  allPill.dataset.id = ALL_CATEGORIES;
+  allPill.textContent = "全部";
+  categoryPillsEl.appendChild(allPill);
+
+  for (const cat of categories) {
+    const pill = document.createElement("button");
+    pill.type = "button";
+    pill.className = `category-pill ${cat.id === selectedCategoryId ? "is-active" : ""}`.trim();
+    pill.dataset.id = cat.id;
+    pill.innerHTML = `<span>${escapeHtml(cat.name)}</span><span class="remove-category" data-remove-id="${cat.id}">✕</span>`;
+    categoryPillsEl.appendChild(pill);
+  }
+
+  const addPill = document.createElement("button");
+  addPill.type = "button";
+  addPill.className = "category-pill is-add";
+  addPill.dataset.action = "add-category";
+  addPill.textContent = "＋ 新增分類";
+  categoryPillsEl.appendChild(addPill);
+
+  openAddSubmarineBtn.disabled = selectedCategoryId === ALL_CATEGORIES;
+
+  renderSubmarines();
+}
+
 function renderSubmarines() {
   submarineListEl.innerHTML = "";
 
-  if (!selectedCategoryId) return;
+  const categories = loadCategories();
+  const all = loadSubmarines();
+  const subs = (selectedCategoryId === ALL_CATEGORIES
+    ? all
+    : all.filter((s) => s.categoryId === selectedCategoryId)
+  ).sort((a, b) => a.returnAt - b.returnAt);
 
-  const subs = loadSubmarines()
-    .filter((s) => s.categoryId === selectedCategoryId)
-    .sort((a, b) => a.returnAt - b.returnAt);
-
-  if (subs.length === 0) {
-    submarineListEl.innerHTML = '<li class="empty-state">這個分類還沒有潛水艇，手動新增一筆吧</li>';
+  if (categories.length === 0) {
+    submarineListEl.innerHTML = '<li class="empty-state">請先新增分類，再手動新增潛水艇</li>';
     return;
   }
 
-  subs.forEach((sub, index) => {
+  if (subs.length === 0) {
+    submarineListEl.innerHTML = '<li class="empty-state">目前沒有潛水艇資料，選一個分類手動新增吧</li>';
+    return;
+  }
+
+  const countByCategory = {};
+
+  for (const sub of subs) {
+    countByCategory[sub.categoryId] = (countByCategory[sub.categoryId] || 0) + 1;
+    const index = countByCategory[sub.categoryId];
+
     const li = document.createElement("li");
     li.className = "submarine-card";
     li.dataset.id = sub.id;
     li.innerHTML = `
-      <div class="submarine-info">
-        <span class="submarine-label">潛水艇 ${index + 1}</span>
-        <span class="submarine-countdown" data-return-at="${sub.returnAt}"></span>
+      <div class="submarine-card-header">
+        <div class="submarine-title">
+          <span class="category-badge">${escapeHtml(categoryNameById(sub.categoryId))}</span>
+          <span class="submarine-name">潛水艇 ${index}</span>
+        </div>
+        <span class="submarine-status">探索中</span>
       </div>
-      <button class="btn-icon danger" data-action="delete-submarine" data-id="${sub.id}">刪除</button>
+      <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+      <div class="submarine-times">
+        <span>出航：${formatClock(sub.departedAt)}</span>
+        <span>回港：<b>${formatClock(sub.returnAt)}</b></span>
+      </div>
+      <div class="submarine-card-footer">
+        <span class="submarine-countdown" data-departed-at="${sub.departedAt}" data-return-at="${sub.returnAt}"></span>
+        <button class="btn-icon danger" data-action="delete-submarine" data-id="${sub.id}">刪除</button>
+      </div>
     `;
     submarineListEl.appendChild(li);
-  });
+  }
 
   tickCountdowns();
 }
 
 let sharedAudioCtx = null;
-document.addEventListener(
-  "click",
-  () => {
-    if (!sharedAudioCtx) {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (Ctx) sharedAudioCtx = new Ctx();
-    } else if (sharedAudioCtx.state === "suspended") {
-      sharedAudioCtx.resume();
-    }
-  },
-  { once: false }
-);
+document.addEventListener("click", () => {
+  if (!sharedAudioCtx) {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (Ctx) sharedAudioCtx = new Ctx();
+  } else if (sharedAudioCtx.state === "suspended") {
+    sharedAudioCtx.resume();
+  }
+});
 
 function playAlertSound() {
   if (!sharedAudioCtx) return;
@@ -372,31 +402,40 @@ function playAlertSound() {
 }
 
 function tickCountdowns() {
-  document.querySelectorAll(".submarine-countdown").forEach((el) => {
-    const returnAt = Number(el.dataset.returnAt);
-    const remaining = returnAt - Date.now();
-    const card = el.closest(".submarine-card");
+  document.querySelectorAll(".submarine-card").forEach((card) => {
+    const countdownEl = card.querySelector(".submarine-countdown");
+    if (!countdownEl) return;
+
+    const departedAt = Number(countdownEl.dataset.departedAt);
+    const returnAt = Number(countdownEl.dataset.returnAt);
+    const now = Date.now();
+    const remaining = returnAt - now;
+    const totalMs = returnAt - departedAt;
+    const progressFill = card.querySelector(".progress-fill");
+    const statusEl = card.querySelector(".submarine-status");
 
     if (remaining <= 0) {
-      el.textContent = "已回港！";
+      countdownEl.textContent = "已回港！";
+      if (statusEl) statusEl.textContent = "已回港！";
       card.classList.add("is-arrived");
+      if (progressFill) progressFill.style.width = "100%";
       if (!notifiedIds.has(card.dataset.id)) {
         notifiedIds.add(card.dataset.id);
         playAlertSound();
       }
     } else {
-      el.textContent = formatRemaining(remaining);
+      countdownEl.textContent = formatRemaining(remaining);
+      if (statusEl) statusEl.textContent = "探索中";
       card.classList.remove("is-arrived");
+      if (progressFill) {
+        const pct = totalMs > 0 ? Math.min(100, Math.max(0, ((now - departedAt) / totalMs) * 100)) : 0;
+        progressFill.style.width = `${pct}%`;
+      }
     }
   });
 }
 
 setInterval(tickCountdowns, 1000);
-
-openAddCategoryBtn.addEventListener("click", () => {
-  categoryForm.reset();
-  categoryDialog.showModal();
-});
 
 closeCategoryDialogBtn.addEventListener("click", () => {
   categoryDialog.close();
@@ -419,6 +458,13 @@ categoryForm.addEventListener("submit", (e) => {
 });
 
 categoryPillsEl.addEventListener("click", (e) => {
+  const addBtn = e.target.closest('[data-action="add-category"]');
+  if (addBtn) {
+    categoryForm.reset();
+    categoryDialog.showModal();
+    return;
+  }
+
   const removeBtn = e.target.closest("[data-remove-id]");
   if (removeBtn) {
     e.stopPropagation();
@@ -426,20 +472,20 @@ categoryPillsEl.addEventListener("click", (e) => {
     const removeId = removeBtn.dataset.removeId;
     saveCategories(loadCategories().filter((c) => c.id !== removeId));
     saveSubmarines(loadSubmarines().filter((s) => s.categoryId !== removeId));
-    if (selectedCategoryId === removeId) selectedCategoryId = null;
+    if (selectedCategoryId === removeId) selectedCategoryId = ALL_CATEGORIES;
     renderCategoryPills();
     return;
   }
 
   const pill = e.target.closest(".category-pill");
-  if (pill) {
+  if (pill && pill.dataset.id) {
     selectedCategoryId = pill.dataset.id;
     renderCategoryPills();
   }
 });
 
 openAddSubmarineBtn.addEventListener("click", () => {
-  if (!selectedCategoryId) return;
+  if (selectedCategoryId === ALL_CATEGORIES) return;
   submarineForm.reset();
   submarineDialog.showModal();
   submarineDurationInput.focus();
@@ -460,10 +506,12 @@ submarineForm.addEventListener("submit", (e) => {
   }
 
   const submarines = loadSubmarines();
+  const departedAt = Date.now();
   submarines.push({
     id: crypto.randomUUID(),
     categoryId: selectedCategoryId,
-    returnAt: Date.now() + ms,
+    departedAt,
+    returnAt: departedAt + ms,
   });
   saveSubmarines(submarines);
 

@@ -4,48 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <header>
   <h1>FFXIV 多帳號管理</h1>
 </header>
 
-<nav class="tab-nav">
-  <button class="tab-btn is-active" data-tab="accounts">帳號到期日</button>
-  <button class="tab-btn" data-tab="submarines">潛水艇提醒</button>
-</nav>
-
-<main>
-  <section id="tab-accounts" class="tab-panel is-active">
-
-    <div class="section-toolbar">
-      <h2>帳號一覽</h2>
-      <button type="button" id="open-add-account" class="btn-primary btn-add">＋ 新增帳號</button>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="accordion">
+      <button type="button" class="accordion-header is-open" id="accounts-accordion-toggle">
+        <span>帳號到期日</span>
+        <span class="accordion-caret">▾</span>
+      </button>
+      <div class="accordion-body" id="accounts-accordion-body">
+        <button type="button" id="open-add-account" class="btn-primary btn-add btn-block">＋ 新增帳號</button>
+        <ul id="account-list" class="account-list"></ul>
+      </div>
     </div>
+  </aside>
 
-    <ul id="account-list" class="account-list"></ul>
-
-  </section>
-
-  <section id="tab-submarines" class="tab-panel">
-
-    <div class="section-toolbar">
-      <h2>角色分類</h2>
-      <button type="button" id="open-add-category" class="btn-primary btn-add">＋ 新增分類</button>
-    </div>
-
-    <div id="category-pills" class="category-pills"></div>
-
-    <div class="section-toolbar">
-      <h3 id="current-category-label">請先新增分類</h3>
+  <main class="content">
+    <div class="submarine-toolbar">
+      <div id="category-pills" class="category-pills"></div>
       <button type="button" id="open-add-submarine" class="btn-primary btn-add" disabled>＋ 手動新增</button>
     </div>
 
     <ul id="submarine-list" class="submarine-list"></ul>
-
-  </section>
-</main>
+  </main>
+</div>
 
 <dialog id="account-dialog">
   <form id="account-form" class="form-card">
@@ -113,6 +101,6 @@
   </form>
 </dialog>
 
-<script src="script.js?v=3"></script>
+<script src="script.js?v=4"></script>
 </body>
 </html>
