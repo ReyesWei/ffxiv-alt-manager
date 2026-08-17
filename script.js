@@ -238,25 +238,29 @@ accordionToggle.addEventListener("click", () => {
 
 renderAccounts();
 
-/* ---------- Submarine leveling reference tables ---------- */
+/* ---------- Reference image galleries (leveling tables, sea maps) ---------- */
 
-const levelingAccordionToggle = document.getElementById("leveling-accordion-toggle");
-const levelingAccordionBody = document.getElementById("leveling-accordion-body");
-const levelingThumbs = document.querySelector(".leveling-thumbs");
+function setupAccordion(toggleId, bodyId) {
+  const toggle = document.getElementById(toggleId);
+  const body = document.getElementById(bodyId);
+  toggle.addEventListener("click", () => {
+    const isOpen = toggle.classList.toggle("is-open");
+    body.classList.toggle("is-collapsed", !isOpen);
+  });
+}
+
+setupAccordion("leveling-accordion-toggle", "leveling-accordion-body");
+setupAccordion("seamap-accordion-toggle", "seamap-accordion-body");
+
 const levelingDialog = document.getElementById("leveling-dialog");
 const levelingDialogTitle = document.getElementById("leveling-dialog-title");
 const levelingDialogImg = document.getElementById("leveling-dialog-img");
 const closeLevelingDialogBtn = document.getElementById("close-leveling-dialog");
 
-levelingAccordionToggle.addEventListener("click", () => {
-  const isOpen = levelingAccordionToggle.classList.toggle("is-open");
-  levelingAccordionBody.classList.toggle("is-collapsed", !isOpen);
-});
-
-levelingThumbs.addEventListener("click", (e) => {
-  const btn = e.target.closest(".leveling-thumb");
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".leveling-thumb[data-src]");
   if (!btn) return;
-  levelingDialogTitle.textContent = `潛水艇練級 ${btn.dataset.range}`;
+  levelingDialogTitle.textContent = btn.dataset.title || "";
   levelingDialogImg.src = btn.dataset.src;
   levelingDialog.showModal();
 });

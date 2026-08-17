@@ -121,23 +121,24 @@ header h1 {
 }
 
 .leveling-thumbs {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
 }
 
 .leveling-thumb {
-  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 16px 8px;
+  padding: 10px 6px;
   border-radius: 12px;
   border: 1px solid rgba(91, 141, 239, 0.4);
   background: rgba(91, 141, 239, 0.1);
   color: #bcd3f9;
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 600;
+  text-align: center;
   cursor: pointer;
 }
 

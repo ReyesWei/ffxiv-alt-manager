@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=25">
+<link rel="stylesheet" href="style.css?v=26">
 </head>
 <body>
 <header>
@@ -38,13 +38,52 @@
       </button>
       <div class="accordion-body is-collapsed" id="leveling-accordion-body">
         <div class="leveling-thumbs">
-          <button type="button" class="leveling-thumb" data-range="1-50" data-src="images/leveling-1-50.png">
+          <button type="button" class="leveling-thumb" data-title="潛水艇練級 1-50" data-src="images/leveling-1-50.png">
             <img src="images/leveling-1-50.png" class="leveling-thumb-img" alt="1-50 練級表">
             <span>1-50</span>
           </button>
-          <button type="button" class="leveling-thumb" data-range="50-85" data-src="images/leveling-50-85.png">
+          <button type="button" class="leveling-thumb" data-title="潛水艇練級 50-85" data-src="images/leveling-50-85.png">
             <img src="images/leveling-50-85.png" class="leveling-thumb-img" alt="50-85 練級表">
             <span>50-85</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion leveling-accordion">
+      <button type="button" class="accordion-header" id="seamap-accordion-toggle">
+        <span>海圖</span>
+        <span class="accordion-caret">▾</span>
+      </button>
+      <div class="accordion-body is-collapsed" id="seamap-accordion-body">
+        <div class="leveling-thumbs">
+          <button type="button" class="leveling-thumb" data-title="海圖 1 - 溺沒海" data-src="images/sea-1.png">
+            <img src="images/sea-1.png" class="leveling-thumb-img" alt="1 - 溺沒海">
+            <span>1 - 溺沒海</span>
+          </button>
+          <button type="button" class="leveling-thumb" data-title="海圖 2 - 灰海" data-src="images/sea-2.png">
+            <img src="images/sea-2.png" class="leveling-thumb-img" alt="2 - 灰海">
+            <span>2 - 灰海</span>
+          </button>
+          <button type="button" class="leveling-thumb" data-title="海圖 3 - 翠浪海" data-src="images/sea-3.png">
+            <img src="images/sea-3.png" class="leveling-thumb-img" alt="3 - 翠浪海">
+            <span>3 - 翠浪海</span>
+          </button>
+          <button type="button" class="leveling-thumb" data-title="海圖 4 - 賽蓮海" data-src="images/sea-4.png">
+            <img src="images/sea-4.png" class="leveling-thumb-img" alt="4 - 賽蓮海">
+            <span>4 - 賽蓮海</span>
+          </button>
+          <button type="button" class="leveling-thumb" data-title="海圖 5 - 紫礁海" data-src="images/sea-5.png">
+            <img src="images/sea-5.png" class="leveling-thumb-img" alt="5 - 紫礁海">
+            <span>5 - 紫礁海</span>
+          </button>
+          <button type="button" class="leveling-thumb" data-title="海圖 6 - 南蒼茫海" data-src="images/sea-6.png">
+            <img src="images/sea-6.png" class="leveling-thumb-img" alt="6 - 南蒼茫海">
+            <span>6 - 南蒼茫海</span>
+          </button>
+          <button type="button" class="leveling-thumb" data-title="海圖 7 - 北洋海" data-src="images/sea-7.png">
+            <img src="images/sea-7.png" class="leveling-thumb-img" alt="7 - 北洋海">
+            <span>7 - 北洋海</span>
           </button>
         </div>
       </div>
@@ -219,6 +258,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=18"></script>
+<script src="script.js?v=19"></script>
 </body>
 </html>
