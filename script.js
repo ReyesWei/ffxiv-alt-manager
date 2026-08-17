@@ -757,4 +757,12 @@ openDataInfoBtn.addEventListener("click", () => dataInfoDialog.showModal());
 closeDataInfoDialogBtn.addEventListener("click", () => dataInfoDialog.close());
 closeDataInfoDialogBtn2.addEventListener("click", () => dataInfoDialog.close());
 
+/* ---------- Click outside any dialog to close it ---------- */
+
+document.querySelectorAll("dialog").forEach((dialog) => {
+  dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+});
+
 addLog("網頁載入");
