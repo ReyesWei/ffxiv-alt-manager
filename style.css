@@ -388,11 +388,16 @@ dialog {
   background: rgba(94, 200, 240, 0.15);
   color: #7fd4f0;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .account-name {
   font-size: 1.175rem;
   font-weight: 600;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .account-dates {
