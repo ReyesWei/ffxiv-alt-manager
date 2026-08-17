@@ -238,6 +238,177 @@ accordionToggle.addEventListener("click", () => {
 
 renderAccounts();
 
+/* ---------- Submarine leveling reference tables ---------- */
+
+const LEVELING_DATA = {
+  "1-50": {
+    half: [
+      [1, "1111", "AB", "0:18:28", "一天"],
+      [4, "1111", "CD", "0:22:23", "一天"],
+      [7, "1111", "EF", "0:23:54", "一天"],
+      [10, "1111", "GE", "0:23:23", "一天"],
+      [14, "1111", "GH", "0:23:02", "一天"],
+      [15, "1111", "GH", "0:23:02", "一天"],
+      [17, "1111", "IGH", "1:04:28", "一天半"],
+      [20, "1111", "HIK", "1:07:51", "一天半"],
+      [24, "1111", "IKL", "1:09:07", "一天半"],
+      [25, "1111", "IKL", "1:09:07", "一天半"],
+      [27, "1111", "IKN", "1:09:09", "一天半"],
+      [30, "1111", "IMP", "1:11:25", "一天半"],
+      [34, "1111", "IPQ", "1:12:00", "一天半"],
+      [35, "1111", "IPQ", "1:12:00", "一天半"],
+      [37, "1111", "IPQ", "1:12:00", "一天半"],
+      [40, "1121", "IPU", "1:11:02", "一天半"],
+      [44, "1121", "WV", "1:11:15", "一天半"],
+      [47, "1121", "WV", "1:11:15", "一天半"],
+    ],
+    full: [
+      [1, "1111", "AB", "0:18:28", "一天"],
+      [4, "1111", "CD", "0:22:23", "一天"],
+      [7, "1111", "EF", "0:23:54", "一天"],
+      [10, "1111", "GE", "0:23:23", "一天"],
+      [14, "1111", "GH", "0:23:02", "一天"],
+      [15, "1111", "GH", "0:23:02", "一天"],
+      [17, "1111", "GI", "0:23:00", "一天"],
+      [20, "1121", "IK", "0:23:54", "一天"],
+      [24, "1121", "IK", "0:23:54", "一天"],
+      [25, "1121", "IK", "0:23:54", "一天"],
+      [27, "1121", "IK", "0:23:54", "一天"],
+      [30, "1111", "KON", "1:12:02", "兩天"],
+      [34, "1121", "MQP", "1:12:48", "兩天"],
+      [35, "1121", "MQP", "1:12:48", "兩天"],
+      [37, "1121", "MPS", "1:13:24", "兩天"],
+      [40, "1121", "MQT", "1:14:32", "兩天"],
+      [44, "1121", "IUW", "1:14:20", "兩天"],
+      [47, "1121", "ITY", "1:14:55", "兩天"],
+    ],
+  },
+  "50-85": {
+    half: [
+      [50, "1121", "AB", "0:23:48", "一天"],
+      [51, "1121", "AB", "0:23:48", "一天"],
+      [52, "1121", "AB", "0:23:48", "一天"],
+      [53, "1121", "AB", "0:23:42", "一天"],
+      [54, "1121", "ACD", "1:07:01", "一天半"],
+      [55, "1121", "ACD", "1:06:43", "一天半"],
+      [56, "1121", "ACD", "1:06:43", "一天半"],
+      [57, "1121", "AFE", "1:10:44", "一天半"],
+      [58, "1121", "AFE", "1:10:44", "一天半"],
+      [59, "1121", "CFE", "1:11:12", "一天半"],
+      [60, "1121", "IJH", "1:11:50", "一天半"],
+      [61, "1121", "BACD", "1:12:00", "一天半"],
+      [62, "1121", "BACD", "1:11:38", "一天半"],
+      [63, "1121", "BACD", "1:11:38", "一天半"],
+      [64, "1121", "BACF", "1:11:46", "一天半"],
+      [65, "1121", "BACF", "1:11:46", "一天半"],
+      [66, "1121", "BACG", "1:11:59", "一天半"],
+      [67, "1121", "ACGD", "1:11:54", "一天半"],
+      [68, "1121", "ACFK", "1:11:54", "一天半"],
+      [69, "1121", "AGFK", "1:11:54", "一天半"],
+      [70, "1121", "ACFK", "1:11:54", "一天半"],
+      [71, "1121", "ACFK", "1:11:54", "一天半"],
+      [72, "1121", "ACFK", "1:11:34", "一天半"],
+      [73, "1121", "ACFK", "1:11:23", "一天半"],
+      [74, "1121", "ACFK", "1:11:03", "一天半"],
+      [75, "1121", "ACFK", "1:11:03", "一天半"],
+      [76, "1121", "ACFK", "1:11:03", "一天半"],
+      [77, "1121", "ACGK", "1:11:53", "一天半"],
+      [78, "1121", "AGFK", "1:11:54", "一天半"],
+      [79, "1121", "DGFK", "1:11:58", "一天半"],
+      [80, "1121", "DGFK", "1:11:58", "一天半"],
+      [81, "1121", "ADEQ", "1:11:44", "一天半"],
+      [82, "1121", "DIJH", "1:11:53", "一天半"],
+      [83, "1121", "DIJH", "1:11:53", "一天半"],
+      [84, "1121", "OIJHL", "1:20:42", "兩天"],
+    ],
+    full: [
+      [50, "1121", "AB", "0:23:48", "一天"],
+      [51, "1121", "AB", "0:23:48", "一天"],
+      [52, "1121", "AB", "0:23:48", "一天"],
+      [53, "1121", "AB", "0:23:42", "一天"],
+      [54, "3121", "AC", "0:23:00", "一天"],
+      [55, "3121", "AC", "0:22:50", "一天"],
+      [56, "3121", "AC", "0:22:50", "一天"],
+      [57, "1121", "BACF", "1:13:07", "兩天"],
+      [58, "1121", "BACF", "1:13:07", "兩天"],
+      [59, "1121", "ACFK", "1:13:37", "兩天"],
+      [60, "1121", "ACFK", "1:13:37", "兩天"],
+      [61, "1121", "DGFK", "1:15:09", "兩天"],
+      [62, "1121", "DGFK", "1:15:09", "兩天"],
+      [63, "1121", "DGFK", "1:14:44", "兩天"],
+      [64, "1121", "DGFK", "1:14:44", "兩天"],
+      [65, "1121", "DGFK", "1:14:32", "兩天"],
+      [66, "1121", "DGFK", "1:14:08", "兩天"],
+      [67, "1121", "DGFK", "1:13:35", "兩天"],
+      [68, "1121", "AGHL", "1:15:18", "兩天"],
+      [69, "1121", "DGHL", "1:15:43", "兩天"],
+      [70, "1121", "DGHL", "1:15:43", "兩天"],
+      [71, "1121", "ACGS", "1:14:50", "兩天"],
+      [72, "1121", "ACGS", "1:14:38", "兩天"],
+      [73, "1121", "ACGS", "1:14:16", "兩天"],
+      [74, "1121", "ACGS", "1:14:16", "兩天"],
+      [75, "1121", "ACGS", "1:14:16", "兩天"],
+      [76, "1121", "DOMN", "1:16:39", "兩天"],
+      [77, "1121", "ACGFK", "1:16:38", "兩天"],
+      [78, "1121", "ACGHL", "1:16:14", "兩天"],
+      [79, "1121", "ACGHL", "1:18:04", "兩天"],
+      [80, "1121", "DIJHL", "1:17:04", "兩天"],
+      [81, "1121", "ADOMN", "1:18:07", "兩天"],
+      [82, "1121", "OIJHL", "1:18:51", "兩天"],
+      [83, "1121", "OIJHL", "1:20:42", "兩天"],
+    ],
+  },
+};
+
+let levelingRange = "1-50";
+let levelingMode = "half";
+
+const levelingAccordionToggle = document.getElementById("leveling-accordion-toggle");
+const levelingAccordionBody = document.getElementById("leveling-accordion-body");
+const levelingRangeTabs = document.getElementById("leveling-range-tabs");
+const levelingModeTabs = document.getElementById("leveling-mode-tabs");
+const levelingTableBody = document.getElementById("leveling-table-body");
+
+levelingAccordionToggle.addEventListener("click", () => {
+  const isOpen = levelingAccordionToggle.classList.toggle("is-open");
+  levelingAccordionBody.classList.toggle("is-collapsed", !isOpen);
+});
+
+function renderLevelingTable() {
+  const rows = LEVELING_DATA[levelingRange][levelingMode];
+  levelingTableBody.innerHTML = rows
+    .map(
+      ([level, config, route, time, interval]) => `
+        <tr>
+          <td>${level}</td>
+          <td>${config}</td>
+          <td>${route}</td>
+          <td>${time}</td>
+          <td>${interval}</td>
+        </tr>
+      `
+    )
+    .join("");
+}
+
+levelingRangeTabs.addEventListener("click", (e) => {
+  const btn = e.target.closest(".leveling-tab");
+  if (!btn) return;
+  levelingRange = btn.dataset.range;
+  levelingRangeTabs.querySelectorAll(".leveling-tab").forEach((b) => b.classList.toggle("is-active", b === btn));
+  renderLevelingTable();
+});
+
+levelingModeTabs.addEventListener("click", (e) => {
+  const btn = e.target.closest(".leveling-tab");
+  if (!btn) return;
+  levelingMode = btn.dataset.mode;
+  levelingModeTabs.querySelectorAll(".leveling-tab").forEach((b) => b.classList.toggle("is-active", b === btn));
+  renderLevelingTable();
+});
+
+renderLevelingTable();
+
 /* ---------- Submarines ---------- */
 
 const CATEGORY_KEY = "ffxiv-sub-categories";

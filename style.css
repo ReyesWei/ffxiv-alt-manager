@@ -116,6 +116,70 @@ header h1 {
   display: none;
 }
 
+.leveling-accordion {
+  margin-top: 16px;
+}
+
+.leveling-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.leveling-tab {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(91, 141, 239, 0.4);
+  background: rgba(91, 141, 239, 0.16);
+  color: #bcd3f9;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.leveling-tab.is-active {
+  background: #5b8def;
+  border-color: #5b8def;
+  color: #fff;
+}
+
+.leveling-table-wrap {
+  max-height: 360px;
+  overflow: auto;
+  border: 1px solid #2a2d3a;
+  border-radius: 10px;
+}
+
+.leveling-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.leveling-table th,
+.leveling-table td {
+  padding: 6px 10px;
+  text-align: center;
+  border-bottom: 1px solid #2a2d3a;
+}
+
+.leveling-table thead th {
+  position: sticky;
+  top: 0;
+  background: #1a1d29;
+  color: #9a9db0;
+  font-weight: 600;
+}
+
+.leveling-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.leveling-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* Section toolbar */
 .section-toolbar {
   display: flex;
