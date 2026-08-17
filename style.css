@@ -479,10 +479,10 @@ dialog {
   min-height: 40px;
   padding: 0 10px 0 16px;
   border-radius: 20px;
-  border: 1px solid #3a3f55;
-  background: #1a1d29;
-  color: #c4c6d4;
-  font-size: 1.025rem;
+  border: 1px solid rgba(91, 141, 239, 0.4);
+  background: rgba(91, 141, 239, 0.16);
+  color: #bcd3f9;
+  font-size: 1.25rem;
   cursor: pointer;
 }
 
@@ -494,6 +494,8 @@ dialog {
 
 .category-pill.is-add {
   border-style: dashed;
+  border-color: #3a3f55;
+  background: #1a1d29;
   color: #9a9db0;
 }
 
@@ -565,8 +567,9 @@ dialog {
   font-size: 1.25rem;
   padding: 2px 10px;
   border-radius: 20px;
-  background: rgba(91, 141, 239, 0.18);
-  color: #8fb3f5;
+  border: 1px solid rgba(91, 141, 239, 0.4);
+  background: rgba(91, 141, 239, 0.16);
+  color: #bcd3f9;
   white-space: nowrap;
 }
 
