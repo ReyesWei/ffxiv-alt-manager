@@ -382,7 +382,7 @@ dialog {
 }
 
 .crystal-badge {
-  font-size: 1.05rem;
+  font-size: 1.175rem;
   padding: 3px 10px;
   border-radius: 20px;
   background: rgba(94, 200, 240, 0.15);
@@ -553,7 +553,7 @@ dialog {
 }
 
 .category-badge {
-  font-size: 1rem;
+  font-size: 1.25rem;
   padding: 2px 10px;
   border-radius: 20px;
   background: rgba(91, 141, 239, 0.18);
