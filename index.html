@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=22">
+<link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
 <header>
@@ -38,12 +38,12 @@
       </button>
       <div class="accordion-body is-collapsed" id="leveling-accordion-body">
         <div class="leveling-thumbs">
-          <button type="button" class="leveling-thumb" data-range="1-50">
-            <span class="leveling-thumb-icon">📊</span>
+          <button type="button" class="leveling-thumb" data-range="1-50" data-src="images/leveling-1-50.png">
+            <img src="images/leveling-1-50.png" class="leveling-thumb-img" alt="1-50 練級表">
             <span>1-50</span>
           </button>
-          <button type="button" class="leveling-thumb" data-range="50-85">
-            <span class="leveling-thumb-icon">📊</span>
+          <button type="button" class="leveling-thumb" data-range="50-85" data-src="images/leveling-50-85.png">
+            <img src="images/leveling-50-85.png" class="leveling-thumb-img" alt="50-85 練級表">
             <span>50-85</span>
           </button>
         </div>
@@ -213,22 +213,12 @@
       <button type="button" id="close-leveling-dialog" class="btn-icon" aria-label="關閉">✕</button>
     </div>
 
-    <div class="leveling-tabs" id="leveling-mode-tabs">
-      <button type="button" class="leveling-tab is-active" data-mode="half">半日收</button>
-      <button type="button" class="leveling-tab" data-mode="full">整日收</button>
-    </div>
-
-    <div class="leveling-table-wrap">
-      <table class="leveling-table">
-        <thead>
-          <tr><th>等級</th><th>配置</th><th>航線</th><th>時間</th><th>收艇間隔</th></tr>
-        </thead>
-        <tbody id="leveling-table-body"></tbody>
-      </table>
+    <div class="leveling-full-img-wrap">
+      <img id="leveling-dialog-img" class="leveling-full-img" alt="潛水艇練級表">
     </div>
   </div>
 </dialog>
 
-<script src="script.js?v=16"></script>
+<script src="script.js?v=17"></script>
 </body>
 </html>
