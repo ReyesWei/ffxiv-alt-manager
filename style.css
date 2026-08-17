@@ -48,6 +48,7 @@ header h1 {
 
 .sidebar {
   flex: 0 0 300px;
+  min-width: 0;
 }
 
 .content {
@@ -361,6 +362,7 @@ dialog {
   border-left: 4px solid #5b8def;
   border-radius: 12px;
   padding: 14px 16px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -379,6 +381,7 @@ dialog {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .crystal-badge {
