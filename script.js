@@ -96,7 +96,7 @@ function renderAccounts() {
     li.className = `account-card ${statusClassFor(worstDays)}`.trim();
     li.innerHTML = `
       <div class="account-card-header">
-        <span class="account-name">${escapeHtml(acc.name)}</span>
+        <span class="account-name" title="${escapeHtml(acc.name)}">${escapeHtml(acc.name)}</span>
         <span class="crystal-badge">💎 ${(acc.crystal ?? 0).toLocaleString()}</span>
       </div>
       <div class="account-dates">
