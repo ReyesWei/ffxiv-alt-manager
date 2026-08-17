@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=21">
+<link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 <header>
@@ -37,21 +37,15 @@
         <span class="accordion-caret">▾</span>
       </button>
       <div class="accordion-body is-collapsed" id="leveling-accordion-body">
-        <div class="leveling-tabs" id="leveling-range-tabs">
-          <button type="button" class="leveling-tab is-active" data-range="1-50">1-50</button>
-          <button type="button" class="leveling-tab" data-range="50-85">50-85</button>
-        </div>
-        <div class="leveling-tabs" id="leveling-mode-tabs">
-          <button type="button" class="leveling-tab is-active" data-mode="half">半日收</button>
-          <button type="button" class="leveling-tab" data-mode="full">整日收</button>
-        </div>
-        <div class="leveling-table-wrap">
-          <table class="leveling-table">
-            <thead>
-              <tr><th>等級</th><th>配置</th><th>航線</th><th>時間</th><th>收艇間隔</th></tr>
-            </thead>
-            <tbody id="leveling-table-body"></tbody>
-          </table>
+        <div class="leveling-thumbs">
+          <button type="button" class="leveling-thumb" data-range="1-50">
+            <span class="leveling-thumb-icon">📊</span>
+            <span>1-50</span>
+          </button>
+          <button type="button" class="leveling-thumb" data-range="50-85">
+            <span class="leveling-thumb-icon">📊</span>
+            <span>50-85</span>
+          </button>
         </div>
       </div>
     </div>
@@ -212,6 +206,29 @@
   </div>
 </dialog>
 
-<script src="script.js?v=14"></script>
+<dialog id="leveling-dialog">
+  <div class="form-card leveling-dialog-card">
+    <div class="dialog-header">
+      <h2 id="leveling-dialog-title">潛水艇練級</h2>
+      <button type="button" id="close-leveling-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="leveling-tabs" id="leveling-mode-tabs">
+      <button type="button" class="leveling-tab is-active" data-mode="half">半日收</button>
+      <button type="button" class="leveling-tab" data-mode="full">整日收</button>
+    </div>
+
+    <div class="leveling-table-wrap">
+      <table class="leveling-table">
+        <thead>
+          <tr><th>等級</th><th>配置</th><th>航線</th><th>時間</th><th>收艇間隔</th></tr>
+        </thead>
+        <tbody id="leveling-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</dialog>
+
+<script src="script.js?v=16"></script>
 </body>
 </html>

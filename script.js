@@ -365,7 +365,10 @@ let levelingMode = "half";
 
 const levelingAccordionToggle = document.getElementById("leveling-accordion-toggle");
 const levelingAccordionBody = document.getElementById("leveling-accordion-body");
-const levelingRangeTabs = document.getElementById("leveling-range-tabs");
+const levelingThumbs = document.querySelector(".leveling-thumbs");
+const levelingDialog = document.getElementById("leveling-dialog");
+const levelingDialogTitle = document.getElementById("leveling-dialog-title");
+const closeLevelingDialogBtn = document.getElementById("close-leveling-dialog");
 const levelingModeTabs = document.getElementById("leveling-mode-tabs");
 const levelingTableBody = document.getElementById("leveling-table-body");
 
@@ -391,12 +394,17 @@ function renderLevelingTable() {
     .join("");
 }
 
-levelingRangeTabs.addEventListener("click", (e) => {
-  const btn = e.target.closest(".leveling-tab");
+levelingThumbs.addEventListener("click", (e) => {
+  const btn = e.target.closest(".leveling-thumb");
   if (!btn) return;
   levelingRange = btn.dataset.range;
-  levelingRangeTabs.querySelectorAll(".leveling-tab").forEach((b) => b.classList.toggle("is-active", b === btn));
+  levelingDialogTitle.textContent = `潛水艇練級 ${levelingRange}`;
   renderLevelingTable();
+  levelingDialog.showModal();
+});
+
+closeLevelingDialogBtn.addEventListener("click", () => {
+  levelingDialog.close();
 });
 
 levelingModeTabs.addEventListener("click", (e) => {
@@ -406,8 +414,6 @@ levelingModeTabs.addEventListener("click", (e) => {
   levelingModeTabs.querySelectorAll(".leveling-tab").forEach((b) => b.classList.toggle("is-active", b === btn));
   renderLevelingTable();
 });
-
-renderLevelingTable();
 
 /* ---------- Submarines ---------- */
 
