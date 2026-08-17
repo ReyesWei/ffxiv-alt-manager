@@ -483,6 +483,7 @@ dialog {
   background: rgba(91, 141, 239, 0.16);
   color: #bcd3f9;
   font-size: 1.25rem;
+  letter-spacing: 1px;
   cursor: pointer;
 }
 
@@ -570,6 +571,7 @@ dialog {
   border: 1px solid rgba(91, 141, 239, 0.4);
   background: rgba(91, 141, 239, 0.16);
   color: #bcd3f9;
+  letter-spacing: 1px;
   white-space: nowrap;
 }
 
