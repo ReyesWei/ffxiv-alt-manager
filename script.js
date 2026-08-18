@@ -446,6 +446,7 @@ function renderSubmarines() {
     const li = document.createElement("li");
     li.className = "submarine-card";
     li.dataset.id = sub.id;
+    li.dataset.categoryId = sub.categoryId;
     li.innerHTML = `
       <div class="submarine-card-header">
         <div class="submarine-title">
@@ -623,10 +624,18 @@ submarineForm.addEventListener("submit", (e) => {
 
 submarineListEl.addEventListener("click", (e) => {
   const btn = e.target.closest('button[data-action="delete-submarine"]');
-  if (!btn) return;
-  if (!confirm("確定要刪除這艘潛水艇的倒數嗎？")) return;
-  saveSubmarines(loadSubmarines().filter((s) => s.id !== btn.dataset.id));
-  renderSubmarines();
+  if (btn) {
+    if (!confirm("確定要刪除這艘潛水艇的倒數嗎？")) return;
+    saveSubmarines(loadSubmarines().filter((s) => s.id !== btn.dataset.id));
+    renderSubmarines();
+    return;
+  }
+
+  const card = e.target.closest(".submarine-card[data-category-id]");
+  if (card && selectedCategoryId !== card.dataset.categoryId) {
+    selectedCategoryId = card.dataset.categoryId;
+    renderCategoryPills();
+  }
 });
 
 renderCategoryPills();
