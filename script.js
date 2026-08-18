@@ -616,9 +616,9 @@ submarineForm.addEventListener("submit", (e) => {
   });
   saveSubmarines(submarines);
 
-  submarineDialog.close();
   submarineForm.reset();
   renderSubmarines();
+  submarineDurationInput.focus();
 });
 
 submarineListEl.addEventListener("click", (e) => {
