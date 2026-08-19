@@ -116,7 +116,7 @@ header h1 {
   display: none;
 }
 
-.leveling-accordion {
+.accordion + .accordion {
   margin-top: 16px;
 }
 
@@ -506,6 +506,7 @@ dialog {
   background: #12141c;
   color: #f0f0f5;
   font-size: 1.025rem;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -701,4 +702,8 @@ dialog {
 .footer-btn-group {
   display: flex;
   gap: 8px;
+}
+
+.footer-btn-group .btn-icon {
+  flex: 1;
 }
