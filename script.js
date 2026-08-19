@@ -500,7 +500,7 @@ function playAlertSound() {
 }
 
 function tickCountdowns() {
-  document.querySelectorAll(".submarine-card").forEach((card) => {
+  document.querySelectorAll("#submarine-list .submarine-card").forEach((card) => {
     const countdownEl = card.querySelector(".submarine-countdown");
     if (!countdownEl) return;
 
@@ -777,5 +777,143 @@ document.querySelectorAll("dialog").forEach((dialog) => {
     if (e.target === dialog) dialog.close();
   });
 });
+
+/* ---------- Treasure map cooldown timers ---------- */
+
+const TREASURE_KEY = "ffxiv-treasure-timers";
+const TREASURE_DURATION_MS = 18 * 60 * 60 * 1000;
+
+setupAccordion("treasure-accordion-toggle", "treasure-accordion-body");
+
+const treasureDialog = document.getElementById("treasure-dialog");
+const treasureForm = document.getElementById("treasure-form");
+const treasureNameInput = document.getElementById("treasure-name");
+const openAddTreasureBtn = document.getElementById("open-add-treasure");
+const closeTreasureDialogBtn = document.getElementById("close-treasure-dialog");
+const treasureListEl = document.getElementById("treasure-list");
+
+function loadTreasures() {
+  const raw = localStorage.getItem(TREASURE_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveTreasures(items) {
+  localStorage.setItem(TREASURE_KEY, JSON.stringify(items));
+}
+
+function renderTreasures() {
+  const items = loadTreasures();
+  treasureListEl.innerHTML = "";
+
+  if (items.length === 0) {
+    treasureListEl.innerHTML = '<li class="empty-state">還沒有角色資料，新增一筆看看吧</li>';
+    return;
+  }
+
+  for (const item of items) {
+    const li = document.createElement("li");
+    li.className = "submarine-card";
+    li.dataset.id = item.id;
+    li.innerHTML = `
+      <div class="submarine-card-header">
+        <span class="submarine-name">${escapeHtml(item.name)}</span>
+        <span class="submarine-status">倒數中</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+      <div class="submarine-card-footer">
+        <span class="submarine-countdown" data-departed-at="${item.readyAt - TREASURE_DURATION_MS}" data-return-at="${item.readyAt}"></span>
+        <div class="footer-btn-group">
+          <button class="btn-icon" data-action="reset-treasure" data-id="${item.id}">重新倒數</button>
+          <button class="btn-icon danger" data-action="delete-treasure" data-id="${item.id}">刪除</button>
+        </div>
+      </div>
+    `;
+    treasureListEl.appendChild(li);
+  }
+
+  tickTreasureCountdowns();
+}
+
+function tickTreasureCountdowns() {
+  document.querySelectorAll("#treasure-list .submarine-card").forEach((card) => {
+    const countdownEl = card.querySelector(".submarine-countdown");
+    if (!countdownEl) return;
+
+    const departedAt = Number(countdownEl.dataset.departedAt);
+    const returnAt = Number(countdownEl.dataset.returnAt);
+    const now = Date.now();
+    const remaining = returnAt - now;
+    const totalMs = returnAt - departedAt;
+    const progressFill = card.querySelector(".progress-fill");
+    const statusEl = card.querySelector(".submarine-status");
+
+    if (remaining <= 0) {
+      countdownEl.textContent = "可挖掘！";
+      if (statusEl) statusEl.textContent = "可挖掘！";
+      card.classList.add("is-arrived");
+      if (progressFill) progressFill.style.width = "100%";
+    } else {
+      countdownEl.textContent = formatRemaining(remaining);
+      if (statusEl) statusEl.textContent = "倒數中";
+      card.classList.remove("is-arrived");
+      if (progressFill) {
+        const pct = totalMs > 0 ? Math.min(100, Math.max(0, ((now - departedAt) / totalMs) * 100)) : 0;
+        progressFill.style.width = `${pct}%`;
+      }
+    }
+  });
+}
+
+setInterval(tickTreasureCountdowns, 1000);
+
+openAddTreasureBtn.addEventListener("click", () => {
+  treasureForm.reset();
+  treasureDialog.showModal();
+});
+
+closeTreasureDialogBtn.addEventListener("click", () => {
+  treasureDialog.close();
+});
+
+treasureForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = treasureNameInput.value.trim();
+  if (!name) return;
+
+  const items = loadTreasures();
+  items.push({
+    id: crypto.randomUUID(),
+    name,
+    readyAt: Date.now() + TREASURE_DURATION_MS,
+  });
+  saveTreasures(items);
+
+  treasureDialog.close();
+  treasureForm.reset();
+  renderTreasures();
+});
+
+treasureListEl.addEventListener("click", (e) => {
+  const resetBtn = e.target.closest('button[data-action="reset-treasure"]');
+  if (resetBtn) {
+    const items = loadTreasures();
+    const item = items.find((i) => i.id === resetBtn.dataset.id);
+    if (item) {
+      item.readyAt = Date.now() + TREASURE_DURATION_MS;
+      saveTreasures(items);
+      renderTreasures();
+    }
+    return;
+  }
+
+  const deleteBtn = e.target.closest('button[data-action="delete-treasure"]');
+  if (deleteBtn) {
+    if (!confirm("確定要刪除這個角色的藏寶圖倒數嗎？")) return;
+    saveTreasures(loadTreasures().filter((i) => i.id !== deleteBtn.dataset.id));
+    renderTreasures();
+  }
+});
+
+renderTreasures();
 
 addLog("網頁載入");

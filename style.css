@@ -219,7 +219,8 @@ dialog {
 #ntfy-dialog,
 #data-info-dialog,
 #log-dialog,
-#leveling-dialog {
+#leveling-dialog,
+#treasure-dialog {
   border: 1px solid #2a2d3a;
   border-radius: 16px;
   background: #1a1d29;
@@ -238,7 +239,8 @@ dialog {
 #ntfy-dialog::backdrop,
 #data-info-dialog::backdrop,
 #log-dialog::backdrop,
-#leveling-dialog::backdrop {
+#leveling-dialog::backdrop,
+#treasure-dialog::backdrop {
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -694,4 +696,9 @@ dialog {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.footer-btn-group {
+  display: flex;
+  gap: 8px;
 }

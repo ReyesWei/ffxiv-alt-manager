@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=26">
+<link rel="stylesheet" href="style.css?v=27">
 </head>
 <body>
 <header>
@@ -86,6 +86,17 @@
             <span>7 - 北洋海</span>
           </button>
         </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button type="button" class="accordion-header" id="treasure-accordion-toggle">
+        <span>藏寶圖倒數時間</span>
+        <span class="accordion-caret">▾</span>
+      </button>
+      <div class="accordion-body is-collapsed" id="treasure-accordion-body">
+        <button type="button" id="open-add-treasure" class="btn-primary btn-add btn-block">＋ 新增角色</button>
+        <ul id="treasure-list" class="account-list"></ul>
       </div>
     </div>
   </aside>
@@ -204,6 +215,22 @@
   </form>
 </dialog>
 
+<dialog id="treasure-dialog">
+  <form id="treasure-form" class="form-card">
+    <div class="dialog-header">
+      <h2>新增角色</h2>
+      <button type="button" id="close-treasure-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="treasure-name">角色名稱</label>
+      <input type="text" id="treasure-name" placeholder="例如：小號A" required>
+    </div>
+
+    <button type="submit" class="btn-primary">新增</button>
+  </form>
+</dialog>
+
 <dialog id="data-info-dialog">
   <div class="form-card">
     <div class="dialog-header">
@@ -258,6 +285,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=21"></script>
+<script src="script.js?v=22"></script>
 </body>
 </html>
