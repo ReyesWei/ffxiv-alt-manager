@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=28">
+<link rel="stylesheet" href="style.css?v=29">
 </head>
 <body>
 <header>
@@ -178,6 +178,8 @@
       <button type="button" id="close-submarine-dialog" class="btn-icon" aria-label="關閉">✕</button>
     </div>
 
+    <div id="submarine-toast" class="inline-toast" role="status" aria-live="polite">✓ 已新增</div>
+
     <div class="field">
       <label for="submarine-duration">剩餘時間</label>
       <input type="text" inputmode="numeric" pattern="[0-9]*" id="submarine-duration" placeholder="例如 012005" required>
@@ -285,6 +287,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=23"></script>
+<script src="script.js?v=24"></script>
 </body>
 </html>

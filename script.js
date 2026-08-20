@@ -284,6 +284,16 @@ const categoryPillsEl = document.getElementById("category-pills");
 const submarineDialog = document.getElementById("submarine-dialog");
 const submarineForm = document.getElementById("submarine-form");
 const submarineDurationInput = document.getElementById("submarine-duration");
+const submarineToast = document.getElementById("submarine-toast");
+let submarineToastTimer = null;
+
+function showSubmarineToast() {
+  if (submarineToastTimer) clearTimeout(submarineToastTimer);
+  submarineToast.classList.add("is-visible");
+  submarineToastTimer = setTimeout(() => {
+    submarineToast.classList.remove("is-visible");
+  }, 1500);
+}
 const openAddSubmarineBtn = document.getElementById("open-add-submarine");
 const closeSubmarineDialogBtn = document.getElementById("close-submarine-dialog");
 const submarineListEl = document.getElementById("submarine-list");
@@ -620,6 +630,7 @@ submarineForm.addEventListener("submit", (e) => {
   submarineForm.reset();
   renderSubmarines();
   submarineDurationInput.focus();
+  showSubmarineToast();
 });
 
 submarineListEl.addEventListener("click", (e) => {

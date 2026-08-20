@@ -233,6 +233,34 @@ dialog {
   width: min(1100px, calc(100vw - 32px));
 }
 
+#submarine-dialog {
+  position: relative;
+}
+
+.inline-toast {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translate(-50%, -8px);
+  background: #163d28;
+  border: 1px solid #2d7a4f;
+  color: #7ee0a0;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1;
+}
+
+.inline-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 #account-dialog::backdrop,
 #category-dialog::backdrop,
 #submarine-dialog::backdrop,
