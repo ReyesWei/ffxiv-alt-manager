@@ -833,7 +833,7 @@ function renderTreasures() {
       <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
       <div class="submarine-countdown" data-departed-at="${item.readyAt - TREASURE_DURATION_MS}" data-return-at="${item.readyAt}"></div>
       <div class="footer-btn-group">
-        <button class="btn-icon" data-action="reset-treasure" data-id="${item.id}" title="重新倒數" aria-label="重新倒數">🔄</button>
+        <button class="btn-icon" data-action="reset-treasure" data-id="${item.id}">刷新</button>
         <button class="btn-icon danger" data-action="delete-treasure" data-id="${item.id}">刪除</button>
       </div>
     `;
