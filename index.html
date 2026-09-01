@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=29">
+<link rel="stylesheet" href="style.css?v=30">
 </head>
 <body>
 <header>
@@ -186,6 +186,20 @@
       <p class="field-hint">2碼＝分鐘（45＝45分）<br>4碼＝時分（1950＝19時50分）<br>6碼＝日時分（012005＝1日20時05分）</p>
     </div>
 
+    <div class="field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="submarine-loot-gold">
+        撈金幣
+      </label>
+    </div>
+
+    <div class="field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="submarine-loot-material">
+        撈材料
+      </label>
+    </div>
+
     <button type="submit" class="btn-primary">開始倒數</button>
   </form>
 </dialog>
@@ -287,6 +301,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=25"></script>
+<script src="script.js?v=26"></script>
 </body>
 </html>

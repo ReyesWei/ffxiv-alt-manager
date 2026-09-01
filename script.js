@@ -284,7 +284,17 @@ const categoryPillsEl = document.getElementById("category-pills");
 const submarineDialog = document.getElementById("submarine-dialog");
 const submarineForm = document.getElementById("submarine-form");
 const submarineDurationInput = document.getElementById("submarine-duration");
+const submarineLootGoldInput = document.getElementById("submarine-loot-gold");
+const submarineLootMaterialInput = document.getElementById("submarine-loot-material");
 const submarineToast = document.getElementById("submarine-toast");
+
+submarineLootGoldInput.addEventListener("change", () => {
+  if (submarineLootGoldInput.checked) submarineLootMaterialInput.checked = false;
+});
+
+submarineLootMaterialInput.addEventListener("change", () => {
+  if (submarineLootMaterialInput.checked) submarineLootGoldInput.checked = false;
+});
 let submarineToastTimer = null;
 
 function showSubmarineToast() {
@@ -360,6 +370,12 @@ function parseDurationCode(code) {
   if (minutes > 59 || hours > 23) return null;
 
   return (days * 24 * 60 + hours * 60 + minutes) * 60000;
+}
+
+function lootLabel(loot) {
+  if (loot === "gold") return "撈金幣";
+  if (loot === "material") return "撈材料";
+  return "";
 }
 
 function indexToLetter(n) {
@@ -463,7 +479,10 @@ function renderSubmarines() {
           <span class="category-badge">${escapeHtml(categoryNameById(sub.categoryId))}</span>
           <span class="submarine-name">潛水艇 ${indexToLetter(index)}</span>
         </div>
-        <span class="submarine-status">探索中</span>
+        <div class="submarine-status-group">
+          ${sub.loot ? `<span class="loot-badge">${lootLabel(sub.loot)}</span>` : ""}
+          <span class="submarine-status">探索中</span>
+        </div>
       </div>
       <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
       <div class="submarine-times">
@@ -617,6 +636,8 @@ submarineForm.addEventListener("submit", (e) => {
     return;
   }
 
+  const loot = submarineLootGoldInput.checked ? "gold" : submarineLootMaterialInput.checked ? "material" : null;
+
   const submarines = loadSubmarines();
   const departedAt = Date.now();
   submarines.push({
@@ -624,6 +645,7 @@ submarineForm.addEventListener("submit", (e) => {
     categoryId: selectedCategoryId,
     departedAt,
     returnAt: departedAt + ms,
+    loot,
   });
   saveSubmarines(submarines);
 
