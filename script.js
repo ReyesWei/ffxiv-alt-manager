@@ -288,13 +288,6 @@ const submarineLootGoldInput = document.getElementById("submarine-loot-gold");
 const submarineLootMaterialInput = document.getElementById("submarine-loot-material");
 const submarineToast = document.getElementById("submarine-toast");
 
-submarineLootGoldInput.addEventListener("change", () => {
-  if (submarineLootGoldInput.checked) submarineLootMaterialInput.checked = false;
-});
-
-submarineLootMaterialInput.addEventListener("change", () => {
-  if (submarineLootMaterialInput.checked) submarineLootGoldInput.checked = false;
-});
 let submarineToastTimer = null;
 
 function showSubmarineToast() {
@@ -373,7 +366,7 @@ function parseDurationCode(code) {
 }
 
 function lootLabel(loot) {
-  if (loot === "gold") return "撈金幣";
+  if (loot === "gold") return "撈金幣/練級";
   if (loot === "material") return "撈材料";
   return "";
 }
@@ -617,13 +610,20 @@ categoryPillsEl.addEventListener("click", (e) => {
 
 openAddSubmarineBtn.addEventListener("click", () => {
   if (selectedCategoryId === ALL_CATEGORIES) return;
-  submarineForm.reset();
+  submarineDurationInput.value = "";
   submarineDialog.showModal();
   submarineDurationInput.focus();
 });
 
 closeSubmarineDialogBtn.addEventListener("click", () => {
   submarineDialog.close();
+});
+
+// Loot selection only persists while the dialog stays open across
+// consecutive additions; once fully closed it resets to the default.
+submarineDialog.addEventListener("close", () => {
+  submarineLootGoldInput.checked = true;
+  submarineLootMaterialInput.checked = false;
 });
 
 submarineForm.addEventListener("submit", (e) => {
@@ -649,7 +649,7 @@ submarineForm.addEventListener("submit", (e) => {
   });
   saveSubmarines(submarines);
 
-  submarineForm.reset();
+  submarineDurationInput.value = "";
   renderSubmarines();
   submarineDurationInput.focus();
   showSubmarineToast();

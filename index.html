@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=30">
+<link rel="stylesheet" href="style.css?v=31">
 </head>
 <body>
 <header>
@@ -188,14 +188,14 @@
 
     <div class="field checkbox-field">
       <label class="checkbox-label">
-        <input type="checkbox" id="submarine-loot-gold">
-        撈金幣
+        <input type="radio" name="submarine-loot" id="submarine-loot-gold" checked>
+        撈金幣/練級
       </label>
     </div>
 
     <div class="field checkbox-field">
       <label class="checkbox-label">
-        <input type="checkbox" id="submarine-loot-material">
+        <input type="radio" name="submarine-loot" id="submarine-loot-material">
         撈材料
       </label>
     </div>
@@ -301,6 +301,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=26"></script>
+<script src="script.js?v=27"></script>
 </body>
 </html>
