@@ -615,16 +615,24 @@ openAddSubmarineBtn.addEventListener("click", () => {
   submarineDurationInput.focus();
 });
 
-closeSubmarineDialogBtn.addEventListener("click", () => {
-  submarineDialog.close();
-});
-
 // Loot selection only persists while the dialog stays open across
 // consecutive additions; once fully closed it resets to the default.
-submarineDialog.addEventListener("close", () => {
+function resetSubmarineLootChoice() {
   submarineLootGoldInput.checked = true;
   submarineLootMaterialInput.checked = false;
+}
+
+closeSubmarineDialogBtn.addEventListener("click", () => {
+  submarineDialog.close();
+  resetSubmarineLootChoice();
 });
+
+submarineDialog.addEventListener("click", (e) => {
+  if (e.target === submarineDialog) resetSubmarineLootChoice();
+});
+
+submarineDialog.addEventListener("close", resetSubmarineLootChoice);
+submarineDialog.addEventListener("cancel", resetSubmarineLootChoice);
 
 submarineForm.addEventListener("submit", (e) => {
   e.preventDefault();
