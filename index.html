@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=32">
+<link rel="stylesheet" href="style.css?v=33">
 </head>
 <body>
 <header>
@@ -97,6 +97,17 @@
       <div class="accordion-body is-collapsed" id="treasure-accordion-body">
         <button type="button" id="open-add-treasure" class="btn-primary btn-add btn-block">＋ 新增角色</button>
         <ul id="treasure-list" class="account-list"></ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button type="button" class="accordion-header" id="farming-accordion-toggle">
+        <span>種菜</span>
+        <span class="accordion-caret">▾</span>
+      </button>
+      <div class="accordion-body is-collapsed" id="farming-accordion-body">
+        <button type="button" id="open-add-farming" class="btn-primary btn-add btn-block">＋ 新增角色</button>
+        <ul id="farming-list" class="account-list"></ul>
       </div>
     </div>
   </aside>
@@ -247,6 +258,22 @@
   </form>
 </dialog>
 
+<dialog id="farming-dialog">
+  <form id="farming-form" class="form-card">
+    <div class="dialog-header">
+      <h2>新增角色</h2>
+      <button type="button" id="close-farming-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="farming-name">角色名稱</label>
+      <input type="text" id="farming-name" placeholder="例如：小號A" required>
+    </div>
+
+    <button type="submit" class="btn-primary">新增</button>
+  </form>
+</dialog>
+
 <dialog id="data-info-dialog">
   <div class="form-card">
     <div class="dialog-header">
@@ -301,6 +328,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=28"></script>
+<script src="script.js?v=29"></script>
 </body>
 </html>

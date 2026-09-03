@@ -955,4 +955,140 @@ treasureListEl.addEventListener("click", (e) => {
 
 renderTreasures();
 
+/* ---------- Farming (種菜) cooldown timers ---------- */
+
+const FARMING_KEY = "ffxiv-farming-timers";
+const FARMING_DURATION_MS = 24 * 60 * 60 * 1000;
+
+setupAccordion("farming-accordion-toggle", "farming-accordion-body");
+
+const farmingDialog = document.getElementById("farming-dialog");
+const farmingForm = document.getElementById("farming-form");
+const farmingNameInput = document.getElementById("farming-name");
+const openAddFarmingBtn = document.getElementById("open-add-farming");
+const closeFarmingDialogBtn = document.getElementById("close-farming-dialog");
+const farmingListEl = document.getElementById("farming-list");
+
+function loadFarming() {
+  const raw = localStorage.getItem(FARMING_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveFarming(items) {
+  localStorage.setItem(FARMING_KEY, JSON.stringify(items));
+}
+
+function renderFarming() {
+  const items = loadFarming();
+  farmingListEl.innerHTML = "";
+
+  if (items.length === 0) {
+    farmingListEl.innerHTML = '<li class="empty-state">還沒有角色資料，新增一筆看看吧</li>';
+    return;
+  }
+
+  for (const item of items) {
+    const li = document.createElement("li");
+    li.className = "submarine-card";
+    li.dataset.id = item.id;
+    li.innerHTML = `
+      <div class="submarine-card-header">
+        <span class="submarine-name">${escapeHtml(item.name)}</span>
+        <span class="submarine-status">倒數中</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+      <div class="submarine-countdown" data-departed-at="${item.readyAt - FARMING_DURATION_MS}" data-return-at="${item.readyAt}"></div>
+      <div class="footer-btn-group">
+        <button class="btn-icon" data-action="reset-farming" data-id="${item.id}">刷新</button>
+        <button class="btn-icon danger" data-action="delete-farming" data-id="${item.id}">刪除</button>
+      </div>
+    `;
+    farmingListEl.appendChild(li);
+  }
+
+  tickFarmingCountdowns();
+}
+
+function tickFarmingCountdowns() {
+  document.querySelectorAll("#farming-list .submarine-card").forEach((card) => {
+    const countdownEl = card.querySelector(".submarine-countdown");
+    if (!countdownEl) return;
+
+    const departedAt = Number(countdownEl.dataset.departedAt);
+    const returnAt = Number(countdownEl.dataset.returnAt);
+    const now = Date.now();
+    const remaining = returnAt - now;
+    const totalMs = returnAt - departedAt;
+    const progressFill = card.querySelector(".progress-fill");
+    const statusEl = card.querySelector(".submarine-status");
+
+    if (remaining <= 0) {
+      countdownEl.textContent = "可收成！";
+      if (statusEl) statusEl.textContent = "可收成！";
+      card.classList.add("is-arrived");
+      if (progressFill) progressFill.style.width = "100%";
+    } else {
+      countdownEl.textContent = formatRemaining(remaining);
+      if (statusEl) statusEl.textContent = "倒數中";
+      card.classList.remove("is-arrived");
+      if (progressFill) {
+        const pct = totalMs > 0 ? Math.min(100, Math.max(0, ((now - departedAt) / totalMs) * 100)) : 0;
+        progressFill.style.width = `${pct}%`;
+      }
+    }
+  });
+}
+
+setInterval(tickFarmingCountdowns, 1000);
+
+openAddFarmingBtn.addEventListener("click", () => {
+  farmingForm.reset();
+  farmingDialog.showModal();
+});
+
+closeFarmingDialogBtn.addEventListener("click", () => {
+  farmingDialog.close();
+});
+
+farmingForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = farmingNameInput.value.trim();
+  if (!name) return;
+
+  const items = loadFarming();
+  items.push({
+    id: crypto.randomUUID(),
+    name,
+    readyAt: Date.now() + FARMING_DURATION_MS,
+  });
+  saveFarming(items);
+
+  farmingDialog.close();
+  farmingForm.reset();
+  renderFarming();
+});
+
+farmingListEl.addEventListener("click", (e) => {
+  const resetBtn = e.target.closest('button[data-action="reset-farming"]');
+  if (resetBtn) {
+    const items = loadFarming();
+    const item = items.find((i) => i.id === resetBtn.dataset.id);
+    if (item) {
+      item.readyAt = Date.now() + FARMING_DURATION_MS;
+      saveFarming(items);
+      renderFarming();
+    }
+    return;
+  }
+
+  const deleteBtn = e.target.closest('button[data-action="delete-farming"]');
+  if (deleteBtn) {
+    if (!confirm("確定要刪除這個角色的種菜倒數嗎？")) return;
+    saveFarming(loadFarming().filter((i) => i.id !== deleteBtn.dataset.id));
+    renderFarming();
+  }
+});
+
+renderFarming();
+
 addLog("網頁載入");
