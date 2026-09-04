@@ -827,11 +827,14 @@ const TREASURE_DURATION_MS = 18 * 60 * 60 * 1000;
 setupAccordion("treasure-accordion-toggle", "treasure-accordion-body");
 
 const treasureDialog = document.getElementById("treasure-dialog");
+const treasureDialogTitle = document.getElementById("treasure-dialog-title");
 const treasureForm = document.getElementById("treasure-form");
 const treasureNameInput = document.getElementById("treasure-name");
 const openAddTreasureBtn = document.getElementById("open-add-treasure");
 const closeTreasureDialogBtn = document.getElementById("close-treasure-dialog");
 const treasureListEl = document.getElementById("treasure-list");
+
+let editingTreasureId = null;
 
 function loadTreasures() {
   const raw = localStorage.getItem(TREASURE_KEY);
@@ -863,6 +866,7 @@ function renderTreasures() {
       <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
       <div class="submarine-countdown" data-departed-at="${item.readyAt - TREASURE_DURATION_MS}" data-return-at="${item.readyAt}"></div>
       <div class="footer-btn-group">
+        <button class="btn-icon" data-action="edit-treasure" data-id="${item.id}">編輯</button>
         <button class="btn-icon" data-action="reset-treasure" data-id="${item.id}">刷新</button>
         <button class="btn-icon danger" data-action="delete-treasure" data-id="${item.id}">刪除</button>
       </div>
@@ -906,6 +910,9 @@ function tickTreasureCountdowns() {
 setInterval(tickTreasureCountdowns, 1000);
 
 openAddTreasureBtn.addEventListener("click", () => {
+  editingTreasureId = null;
+  treasureDialogTitle.textContent = "新增角色";
+  treasureForm.querySelector(".btn-primary").textContent = "新增";
   treasureForm.reset();
   treasureDialog.showModal();
 });
@@ -920,11 +927,17 @@ treasureForm.addEventListener("submit", (e) => {
   if (!name) return;
 
   const items = loadTreasures();
-  items.push({
-    id: crypto.randomUUID(),
-    name,
-    readyAt: Date.now() + TREASURE_DURATION_MS,
-  });
+
+  if (editingTreasureId) {
+    const item = items.find((i) => i.id === editingTreasureId);
+    if (item) item.name = name;
+  } else {
+    items.push({
+      id: crypto.randomUUID(),
+      name,
+      readyAt: Date.now() + TREASURE_DURATION_MS,
+    });
+  }
   saveTreasures(items);
 
   treasureDialog.close();
@@ -933,6 +946,18 @@ treasureForm.addEventListener("submit", (e) => {
 });
 
 treasureListEl.addEventListener("click", (e) => {
+  const editBtn = e.target.closest('button[data-action="edit-treasure"]');
+  if (editBtn) {
+    const item = loadTreasures().find((i) => i.id === editBtn.dataset.id);
+    if (!item) return;
+    editingTreasureId = item.id;
+    treasureDialogTitle.textContent = "編輯角色";
+    treasureForm.querySelector(".btn-primary").textContent = "儲存";
+    treasureNameInput.value = item.name;
+    treasureDialog.showModal();
+    return;
+  }
+
   const resetBtn = e.target.closest('button[data-action="reset-treasure"]');
   if (resetBtn) {
     const items = loadTreasures();
@@ -963,11 +988,14 @@ const FARMING_DURATION_MS = 24 * 60 * 60 * 1000;
 setupAccordion("farming-accordion-toggle", "farming-accordion-body");
 
 const farmingDialog = document.getElementById("farming-dialog");
+const farmingDialogTitle = document.getElementById("farming-dialog-title");
 const farmingForm = document.getElementById("farming-form");
 const farmingNameInput = document.getElementById("farming-name");
 const openAddFarmingBtn = document.getElementById("open-add-farming");
 const closeFarmingDialogBtn = document.getElementById("close-farming-dialog");
 const farmingListEl = document.getElementById("farming-list");
+
+let editingFarmingId = null;
 
 function loadFarming() {
   const raw = localStorage.getItem(FARMING_KEY);
@@ -999,6 +1027,7 @@ function renderFarming() {
       <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
       <div class="submarine-countdown" data-departed-at="${item.readyAt - FARMING_DURATION_MS}" data-return-at="${item.readyAt}"></div>
       <div class="footer-btn-group">
+        <button class="btn-icon" data-action="edit-farming" data-id="${item.id}">編輯</button>
         <button class="btn-icon" data-action="reset-farming" data-id="${item.id}">刷新</button>
         <button class="btn-icon danger" data-action="delete-farming" data-id="${item.id}">刪除</button>
       </div>
@@ -1042,6 +1071,9 @@ function tickFarmingCountdowns() {
 setInterval(tickFarmingCountdowns, 1000);
 
 openAddFarmingBtn.addEventListener("click", () => {
+  editingFarmingId = null;
+  farmingDialogTitle.textContent = "新增角色";
+  farmingForm.querySelector(".btn-primary").textContent = "新增";
   farmingForm.reset();
   farmingDialog.showModal();
 });
@@ -1056,11 +1088,17 @@ farmingForm.addEventListener("submit", (e) => {
   if (!name) return;
 
   const items = loadFarming();
-  items.push({
-    id: crypto.randomUUID(),
-    name,
-    readyAt: Date.now() + FARMING_DURATION_MS,
-  });
+
+  if (editingFarmingId) {
+    const item = items.find((i) => i.id === editingFarmingId);
+    if (item) item.name = name;
+  } else {
+    items.push({
+      id: crypto.randomUUID(),
+      name,
+      readyAt: Date.now() + FARMING_DURATION_MS,
+    });
+  }
   saveFarming(items);
 
   farmingDialog.close();
@@ -1069,6 +1107,18 @@ farmingForm.addEventListener("submit", (e) => {
 });
 
 farmingListEl.addEventListener("click", (e) => {
+  const editBtn = e.target.closest('button[data-action="edit-farming"]');
+  if (editBtn) {
+    const item = loadFarming().find((i) => i.id === editBtn.dataset.id);
+    if (!item) return;
+    editingFarmingId = item.id;
+    farmingDialogTitle.textContent = "編輯角色";
+    farmingForm.querySelector(".btn-primary").textContent = "儲存";
+    farmingNameInput.value = item.name;
+    farmingDialog.showModal();
+    return;
+  }
+
   const resetBtn = e.target.closest('button[data-action="reset-farming"]');
   if (resetBtn) {
     const items = loadFarming();
