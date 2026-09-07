@@ -986,10 +986,11 @@ treasureListEl.addEventListener("click", (e) => {
 
 renderTreasures();
 
-/* ---------- Farming (種菜) cooldown timers ---------- */
+/* ---------- Farming (種菜) elapsed-time timers ---------- */
 
 const FARMING_KEY = "ffxiv-farming-timers";
-const FARMING_DURATION_MS = 24 * 60 * 60 * 1000;
+const FARMING_CAP_MS = 48 * 60 * 60 * 1000;
+const FARMING_OLD_DURATION_MS = 24 * 60 * 60 * 1000; // used only to migrate old records
 
 setupAccordion("farming-accordion-toggle", "farming-accordion-body");
 
@@ -1005,11 +1006,41 @@ let editingFarmingId = null;
 
 function loadFarming() {
   const raw = localStorage.getItem(FARMING_KEY);
-  return raw ? JSON.parse(raw) : [];
+  const items = raw ? JSON.parse(raw) : [];
+
+  // Migrate old "countdown to 24h" records to the new "count up, capped at
+  // 48h" model, preserving how much time had already elapsed.
+  let migrated = false;
+  const upgraded = items.map((item) => {
+    if (item.startedAt !== undefined) return item;
+    migrated = true;
+    return {
+      id: item.id,
+      name: item.name,
+      startedAt: item.readyAt - FARMING_OLD_DURATION_MS,
+    };
+  });
+  if (migrated) saveFarming(upgraded);
+
+  return upgraded;
 }
 
 function saveFarming(items) {
   localStorage.setItem(FARMING_KEY, JSON.stringify(items));
+}
+
+function formatElapsed(ms) {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  let label = "已經過 ";
+  if (days > 0) label += `${days}天`;
+  if (days > 0 || hours > 0) label += `${hours}小時`;
+  label += `${minutes}分${seconds}秒`;
+  return label;
 }
 
 function renderFarming() {
@@ -1028,10 +1059,10 @@ function renderFarming() {
     li.innerHTML = `
       <div class="submarine-card-header">
         <span class="submarine-name">${escapeHtml(item.name)}</span>
-        <span class="submarine-status">倒數中</span>
+        <span class="submarine-status">累計中</span>
       </div>
       <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
-      <div class="submarine-countdown" data-departed-at="${item.readyAt - FARMING_DURATION_MS}" data-return-at="${item.readyAt}"></div>
+      <div class="submarine-countdown" data-started-at="${item.startedAt}"></div>
       <div class="footer-btn-group">
         <button class="btn-icon" data-action="edit-farming" data-id="${item.id}">編輯</button>
         <button class="btn-icon" data-action="reset-farming" data-id="${item.id}">刷新</button>
@@ -1049,27 +1080,21 @@ function tickFarmingCountdowns() {
     const countdownEl = card.querySelector(".submarine-countdown");
     if (!countdownEl) return;
 
-    const departedAt = Number(countdownEl.dataset.departedAt);
-    const returnAt = Number(countdownEl.dataset.returnAt);
+    const startedAt = Number(countdownEl.dataset.startedAt);
     const now = Date.now();
-    const remaining = returnAt - now;
-    const totalMs = returnAt - departedAt;
+    const elapsed = Math.min(now - startedAt, FARMING_CAP_MS);
     const progressFill = card.querySelector(".progress-fill");
     const statusEl = card.querySelector(".submarine-status");
 
-    if (remaining <= 0) {
-      countdownEl.textContent = "可收成！";
-      if (statusEl) statusEl.textContent = "可收成！";
+    countdownEl.textContent = formatElapsed(elapsed);
+    if (progressFill) progressFill.style.width = `${(elapsed / FARMING_CAP_MS) * 100}%`;
+
+    if (elapsed >= FARMING_CAP_MS) {
+      if (statusEl) statusEl.textContent = "已達上限";
       card.classList.add("is-arrived");
-      if (progressFill) progressFill.style.width = "100%";
     } else {
-      countdownEl.textContent = formatRemaining(remaining);
-      if (statusEl) statusEl.textContent = "倒數中";
+      if (statusEl) statusEl.textContent = "累計中";
       card.classList.remove("is-arrived");
-      if (progressFill) {
-        const pct = totalMs > 0 ? Math.min(100, Math.max(0, ((now - departedAt) / totalMs) * 100)) : 0;
-        progressFill.style.width = `${pct}%`;
-      }
     }
   });
 }
@@ -1102,7 +1127,7 @@ farmingForm.addEventListener("submit", (e) => {
     items.push({
       id: crypto.randomUUID(),
       name,
-      readyAt: Date.now() + FARMING_DURATION_MS,
+      startedAt: Date.now(),
     });
   }
   saveFarming(items);
@@ -1130,7 +1155,7 @@ farmingListEl.addEventListener("click", (e) => {
     const items = loadFarming();
     const item = items.find((i) => i.id === resetBtn.dataset.id);
     if (item) {
-      item.readyAt = Date.now() + FARMING_DURATION_MS;
+      item.startedAt = Date.now();
       saveFarming(items);
       renderFarming();
     }
@@ -1139,7 +1164,7 @@ farmingListEl.addEventListener("click", (e) => {
 
   const deleteBtn = e.target.closest('button[data-action="delete-farming"]');
   if (deleteBtn) {
-    if (!confirm("確定要刪除這個角色的種菜倒數嗎？")) return;
+    if (!confirm("確定要刪除這個角色的種菜計時嗎？")) return;
     saveFarming(loadFarming().filter((i) => i.id !== deleteBtn.dataset.id));
     renderFarming();
   }
