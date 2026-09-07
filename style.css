@@ -674,6 +674,10 @@ dialog {
   font-weight: 600;
 }
 
+#farming-list .submarine-name {
+  font-size: 1.375rem;
+}
+
 .submarine-status-group {
   display: flex;
   align-items: center;
