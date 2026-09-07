@@ -288,6 +288,12 @@ const submarineLootGoldInput = document.getElementById("submarine-loot-gold");
 const submarineLootMaterialInput = document.getElementById("submarine-loot-material");
 const submarineToast = document.getElementById("submarine-toast");
 
+[submarineLootGoldInput, submarineLootMaterialInput].forEach((input) => {
+  input.addEventListener("change", () => {
+    submarineDurationInput.focus();
+  });
+});
+
 let submarineToastTimer = null;
 
 function showSubmarineToast() {
