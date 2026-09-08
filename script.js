@@ -1,3 +1,41 @@
+/* ---------- Auth gate ---------- */
+/* Password is stored only as a SHA-256 hash, never as plaintext, so it isn't
+   readable by scanning the source. This is a light deterrent for a static
+   site with no server, not real security. */
+
+const AUTH_KEY = "ffxiv-auth-ok";
+const AUTH_HASH = "69481e4583f7a8fbc1200bc629603cb9a0d5b16822de87b0aca965c89cd80f00";
+
+async function sha256Hex(text) {
+  const data = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(hashBuffer)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+const authGate = document.getElementById("auth-gate");
+const authGateForm = document.getElementById("auth-gate-form");
+const authGateInput = document.getElementById("auth-gate-input");
+const authGateError = document.getElementById("auth-gate-error");
+
+if (localStorage.getItem(AUTH_KEY) === "1") {
+  authGate.classList.add("is-hidden");
+} else {
+  authGateInput.focus();
+}
+
+authGateForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const hash = await sha256Hex(authGateInput.value);
+  if (hash === AUTH_HASH) {
+    localStorage.setItem(AUTH_KEY, "1");
+    authGate.classList.add("is-hidden");
+  } else {
+    authGateError.hidden = false;
+    authGateInput.value = "";
+    authGateInput.focus();
+  }
+});
+
 /* ---------- Debug log (defined first: used during early startup checks) ---------- */
 
 const LOG_KEY = "ffxiv-debug-log";

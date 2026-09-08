@@ -763,3 +763,60 @@ dialog {
 .footer-btn-group .btn-icon {
   flex: 1;
 }
+
+/* Auth gate */
+.auth-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #12141c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.auth-gate.is-hidden {
+  display: none;
+}
+
+.auth-gate-card {
+  width: min(340px, 100%);
+  background: #1a1d29;
+  border: 1px solid #2a2d3a;
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.auth-gate-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 18px;
+}
+
+#auth-gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-gate-input {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #3a3f55;
+  background: #12141c;
+  color: #f0f0f5;
+  font-size: 1.125rem;
+  width: 100%;
+  text-align: center;
+}
+
+.auth-gate-input:focus {
+  outline: 2px solid #5b8def;
+}
+
+.auth-gate-error {
+  color: #e05a5a;
+  font-size: 0.95rem;
+}
