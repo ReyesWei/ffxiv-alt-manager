@@ -1028,6 +1028,7 @@ renderTreasures();
 
 const FARMING_KEY = "ffxiv-farming-timers";
 const FARMING_CAP_MS = 48 * 60 * 60 * 1000;
+const FARMING_GREEN_THRESHOLD_MS = 24 * 60 * 60 * 1000;
 const FARMING_OLD_DURATION_MS = 24 * 60 * 60 * 1000; // used only to migrate old records
 
 setupAccordion("farming-accordion-toggle", "farming-accordion-body");
@@ -1127,13 +1128,8 @@ function tickFarmingCountdowns() {
     countdownEl.textContent = formatElapsed(elapsed);
     if (progressFill) progressFill.style.width = `${(elapsed / FARMING_CAP_MS) * 100}%`;
 
-    if (elapsed >= FARMING_CAP_MS) {
-      if (statusEl) statusEl.textContent = "已達上限";
-      card.classList.add("is-arrived");
-    } else {
-      if (statusEl) statusEl.textContent = "累計中";
-      card.classList.remove("is-arrived");
-    }
+    if (statusEl) statusEl.textContent = elapsed >= FARMING_CAP_MS ? "已達上限" : "累計中";
+    card.classList.toggle("is-arrived", elapsed >= FARMING_GREEN_THRESHOLD_MS);
   });
 }
 
