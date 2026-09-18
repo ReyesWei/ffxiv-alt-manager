@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=36">
+<link rel="stylesheet" href="style.css?v=37">
 </head>
 <body>
 <div id="auth-gate" class="auth-gate">
@@ -118,6 +118,17 @@
       <div class="accordion-body is-collapsed" id="farming-accordion-body">
         <button type="button" id="open-add-farming" class="btn-primary btn-add btn-block">＋ 新增角色</button>
         <ul id="farming-list" class="account-list"></ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button type="button" class="accordion-header" id="guild-accordion-toggle">
+        <span>公會資訊</span>
+        <span class="accordion-caret">▾</span>
+      </button>
+      <div class="accordion-body is-collapsed" id="guild-accordion-body">
+        <button type="button" id="open-add-guild" class="btn-primary btn-add btn-block">＋ 新增公會</button>
+        <ul id="guild-list" class="account-list"></ul>
       </div>
     </div>
   </aside>
@@ -284,6 +295,40 @@
   </form>
 </dialog>
 
+<dialog id="guild-dialog">
+  <form id="guild-form" class="form-card">
+    <div class="dialog-header">
+      <h2 id="guild-dialog-title">新增公會</h2>
+      <button type="button" id="close-guild-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="guild-leader">會長名稱</label>
+      <input type="text" id="guild-leader" placeholder="例如：小明" required>
+    </div>
+
+    <div class="field">
+      <label for="guild-members">成員名單</label>
+      <textarea id="guild-members" rows="5" placeholder="把所有成員打在這裡就好"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="guild-level">公會等級</label>
+      <input type="number" id="guild-level" min="0" step="1" placeholder="例如 7">
+    </div>
+
+    <div class="field">
+      <label for="guild-founded">創建日期</label>
+      <div class="date-input-row">
+        <input type="date" id="guild-founded" min="2020-01-01" max="2099-12-31">
+        <button type="button" class="btn-icon date-picker-btn" data-target="guild-founded" aria-label="選擇日期">📅</button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary">新增公會</button>
+  </form>
+</dialog>
+
 <dialog id="data-info-dialog">
   <div class="form-card">
     <div class="dialog-header">
@@ -338,6 +383,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=34"></script>
+<script src="script.js?v=35"></script>
 </body>
 </html>

@@ -221,7 +221,8 @@ dialog {
 #log-dialog,
 #leveling-dialog,
 #treasure-dialog,
-#farming-dialog {
+#farming-dialog,
+#guild-dialog {
   border: 1px solid #2a2d3a;
   border-radius: 16px;
   background: #1a1d29;
@@ -270,7 +271,8 @@ dialog {
 #log-dialog::backdrop,
 #leveling-dialog::backdrop,
 #treasure-dialog::backdrop,
-#farming-dialog::backdrop {
+#farming-dialog::backdrop,
+#guild-dialog::backdrop {
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -355,7 +357,8 @@ dialog {
 
 .field input[type="text"],
 .field input[type="date"],
-.field input[type="number"] {
+.field input[type="number"],
+.field textarea {
   min-height: 44px;
   padding: 0 12px;
   border-radius: 10px;
@@ -364,6 +367,12 @@ dialog {
   color: #f0f0f5;
   font-size: 1.125rem;
   width: 100%;
+}
+
+.field textarea {
+  padding: 10px 12px;
+  font-family: inherit;
+  resize: vertical;
 }
 
 .field input[type="number"]::-webkit-outer-spin-button,
@@ -819,4 +828,12 @@ dialog {
 .auth-gate-error {
   color: #e05a5a;
   font-size: 0.95rem;
+}
+
+/* Guild card */
+.guild-members {
+  font-size: 0.975rem;
+  color: #c4c6d4;
+  white-space: pre-wrap;
+  word-break: break-word;
 }

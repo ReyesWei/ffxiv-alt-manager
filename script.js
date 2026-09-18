@@ -1206,4 +1206,133 @@ farmingListEl.addEventListener("click", (e) => {
 
 renderFarming();
 
+/* ---------- Guilds (公會資訊) ---------- */
+
+const GUILD_KEY = "ffxiv-guilds";
+
+setupAccordion("guild-accordion-toggle", "guild-accordion-body");
+
+const guildDialog = document.getElementById("guild-dialog");
+const guildDialogTitle = document.getElementById("guild-dialog-title");
+const guildForm = document.getElementById("guild-form");
+const guildLeaderInput = document.getElementById("guild-leader");
+const guildMembersInput = document.getElementById("guild-members");
+const guildLevelInput = document.getElementById("guild-level");
+const guildFoundedInput = document.getElementById("guild-founded");
+const openAddGuildBtn = document.getElementById("open-add-guild");
+const closeGuildDialogBtn = document.getElementById("close-guild-dialog");
+const guildListEl = document.getElementById("guild-list");
+
+let editingGuildId = null;
+
+function loadGuilds() {
+  const raw = localStorage.getItem(GUILD_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveGuilds(items) {
+  localStorage.setItem(GUILD_KEY, JSON.stringify(items));
+}
+
+function renderGuilds() {
+  const items = loadGuilds();
+  guildListEl.innerHTML = "";
+
+  if (items.length === 0) {
+    guildListEl.innerHTML = '<li class="empty-state">還沒有公會資料，新增一筆看看吧</li>';
+    return;
+  }
+
+  for (const item of items) {
+    const li = document.createElement("li");
+    li.className = "account-card";
+    li.innerHTML = `
+      <div class="account-card-header">
+        <span class="account-name" title="${escapeHtml(item.leader)}">${escapeHtml(item.leader)}</span>
+        <span class="category-badge">Lv.${item.level ?? 0}</span>
+      </div>
+      <div class="account-dates">
+        <div class="date-line">
+          <span>創建日期：${item.founded ? formatDate(item.founded) : "未填寫"}</span>
+        </div>
+      </div>
+      <div class="guild-members">${item.members ? escapeHtml(item.members) : "尚未填寫成員名單"}</div>
+      <div class="account-actions">
+        <button class="btn-icon" data-action="edit-guild" data-id="${item.id}">編輯</button>
+        <button class="btn-icon danger" data-action="delete-guild" data-id="${item.id}">刪除</button>
+      </div>
+    `;
+    guildListEl.appendChild(li);
+  }
+}
+
+function resetGuildForm() {
+  guildForm.reset();
+  editingGuildId = null;
+  guildDialogTitle.textContent = "新增公會";
+  guildForm.querySelector(".btn-primary").textContent = "新增公會";
+}
+
+openAddGuildBtn.addEventListener("click", () => {
+  resetGuildForm();
+  guildDialog.showModal();
+});
+
+closeGuildDialogBtn.addEventListener("click", () => {
+  guildDialog.close();
+});
+
+guildForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const leader = guildLeaderInput.value.trim();
+  const members = guildMembersInput.value.trim();
+  const level = guildLevelInput.value === "" ? null : Math.max(0, Math.floor(Number(guildLevelInput.value)));
+  const founded = guildFoundedInput.value;
+
+  if (!leader) return;
+
+  const guilds = loadGuilds();
+
+  if (editingGuildId) {
+    const idx = guilds.findIndex((g) => g.id === editingGuildId);
+    if (idx !== -1) {
+      guilds[idx] = { ...guilds[idx], leader, members, level, founded };
+    }
+  } else {
+    guilds.push({ id: crypto.randomUUID(), leader, members, level, founded });
+  }
+
+  saveGuilds(guilds);
+  guildDialog.close();
+  resetGuildForm();
+  renderGuilds();
+});
+
+guildListEl.addEventListener("click", (e) => {
+  const editBtn = e.target.closest('button[data-action="edit-guild"]');
+  if (editBtn) {
+    const item = loadGuilds().find((g) => g.id === editBtn.dataset.id);
+    if (!item) return;
+    editingGuildId = item.id;
+    guildDialogTitle.textContent = "編輯公會";
+    guildForm.querySelector(".btn-primary").textContent = "儲存";
+    guildLeaderInput.value = item.leader;
+    guildMembersInput.value = item.members || "";
+    guildLevelInput.value = item.level ?? "";
+    guildFoundedInput.value = item.founded || "";
+    guildDialog.showModal();
+    return;
+  }
+
+  const deleteBtn = e.target.closest('button[data-action="delete-guild"]');
+  if (deleteBtn) {
+    if (!confirm("確定要刪除這個公會資料嗎？")) return;
+    saveGuilds(loadGuilds().filter((g) => g.id !== deleteBtn.dataset.id));
+    renderGuilds();
+  }
+});
+
+renderGuilds();
+
 addLog("網頁載入");
