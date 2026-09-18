@@ -1219,6 +1219,7 @@ const guildLeaderInput = document.getElementById("guild-leader");
 const guildMembersInput = document.getElementById("guild-members");
 const guildLevelInput = document.getElementById("guild-level");
 const guildFoundedInput = document.getElementById("guild-founded");
+const guildLandMarkedInput = document.getElementById("guild-land-marked");
 const openAddGuildBtn = document.getElementById("open-add-guild");
 const closeGuildDialogBtn = document.getElementById("close-guild-dialog");
 const guildListEl = document.getElementById("guild-list");
@@ -1256,6 +1257,7 @@ function renderGuilds() {
           <span>創建日期：${item.founded ? formatDate(item.founded) : "未填寫"}</span>
         </div>
       </div>
+      ${item.landMarked ? '<span class="loot-badge" style="align-self:flex-start">已標土地</span>' : ""}
       <div class="guild-members">${item.members ? escapeHtml(item.members) : "尚未填寫成員名單"}</div>
       <div class="account-actions">
         <button class="btn-icon" data-action="edit-guild" data-id="${item.id}">編輯</button>
@@ -1289,6 +1291,7 @@ guildForm.addEventListener("submit", (e) => {
   const members = guildMembersInput.value.trim();
   const level = guildLevelInput.value === "" ? null : Math.max(0, Math.floor(Number(guildLevelInput.value)));
   const founded = guildFoundedInput.value;
+  const landMarked = guildLandMarkedInput.checked;
 
   if (!leader) return;
 
@@ -1297,10 +1300,10 @@ guildForm.addEventListener("submit", (e) => {
   if (editingGuildId) {
     const idx = guilds.findIndex((g) => g.id === editingGuildId);
     if (idx !== -1) {
-      guilds[idx] = { ...guilds[idx], leader, members, level, founded };
+      guilds[idx] = { ...guilds[idx], leader, members, level, founded, landMarked };
     }
   } else {
-    guilds.push({ id: crypto.randomUUID(), leader, members, level, founded });
+    guilds.push({ id: crypto.randomUUID(), leader, members, level, founded, landMarked });
   }
 
   saveGuilds(guilds);
@@ -1321,6 +1324,7 @@ guildListEl.addEventListener("click", (e) => {
     guildMembersInput.value = item.members || "";
     guildLevelInput.value = item.level ?? "";
     guildFoundedInput.value = item.founded || "";
+    guildLandMarkedInput.checked = Boolean(item.landMarked);
     guildDialog.showModal();
     return;
   }
