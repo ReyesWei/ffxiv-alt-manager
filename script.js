@@ -1219,6 +1219,7 @@ const guildLeaderInput = document.getElementById("guild-leader");
 const guildMembersInput = document.getElementById("guild-members");
 const guildLevelInput = document.getElementById("guild-level");
 const guildFoundedInput = document.getElementById("guild-founded");
+const guildJoinedInput = document.getElementById("guild-joined");
 const guildLandMarkedInput = document.getElementById("guild-land-marked");
 const openAddGuildBtn = document.getElementById("open-add-guild");
 const closeGuildDialogBtn = document.getElementById("close-guild-dialog");
@@ -1256,6 +1257,9 @@ function renderGuilds() {
         <div class="date-line">
           <span>創建日期：${item.founded ? formatDate(item.founded) : "未填寫"}</span>
         </div>
+        <div class="date-line">
+          <span>小號加入時間：${item.joined ? formatDate(item.joined) : "未填寫"}</span>
+        </div>
       </div>
       ${item.landMarked ? '<span class="loot-badge" style="align-self:flex-start">已標土地</span>' : ""}
       <div class="guild-members">${item.members ? escapeHtml(item.members) : "尚未填寫成員名單"}</div>
@@ -1291,6 +1295,7 @@ guildForm.addEventListener("submit", (e) => {
   const members = guildMembersInput.value.trim();
   const level = guildLevelInput.value === "" ? null : Math.max(0, Math.floor(Number(guildLevelInput.value)));
   const founded = guildFoundedInput.value;
+  const joined = guildJoinedInput.value;
   const landMarked = guildLandMarkedInput.checked;
 
   if (!leader) return;
@@ -1300,10 +1305,10 @@ guildForm.addEventListener("submit", (e) => {
   if (editingGuildId) {
     const idx = guilds.findIndex((g) => g.id === editingGuildId);
     if (idx !== -1) {
-      guilds[idx] = { ...guilds[idx], leader, members, level, founded, landMarked };
+      guilds[idx] = { ...guilds[idx], leader, members, level, founded, joined, landMarked };
     }
   } else {
-    guilds.push({ id: crypto.randomUUID(), leader, members, level, founded, landMarked });
+    guilds.push({ id: crypto.randomUUID(), leader, members, level, founded, joined, landMarked });
   }
 
   saveGuilds(guilds);
@@ -1324,6 +1329,7 @@ guildListEl.addEventListener("click", (e) => {
     guildMembersInput.value = item.members || "";
     guildLevelInput.value = item.level ?? "";
     guildFoundedInput.value = item.founded || "";
+    guildJoinedInput.value = item.joined || "";
     guildLandMarkedInput.checked = Boolean(item.landMarked);
     guildDialog.showModal();
     return;
