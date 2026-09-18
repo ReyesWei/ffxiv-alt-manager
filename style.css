@@ -837,3 +837,13 @@ dialog {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+.guild-transfer {
+  font-size: 0.975rem;
+  font-weight: 600;
+  color: #c4c6d4;
+}
+
+.guild-transfer.is-ready {
+  color: #4ad07a;
+}

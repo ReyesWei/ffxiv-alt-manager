@@ -1236,6 +1236,21 @@ function saveGuilds(items) {
   localStorage.setItem(GUILD_KEY, JSON.stringify(items));
 }
 
+function guildTransferHtml(joined) {
+  if (!joined) return "";
+
+  const transferDate = new Date(joined + "T00:00:00");
+  transferDate.setDate(transferDate.getDate() + 30);
+  const y = transferDate.getFullYear();
+  const m = String(transferDate.getMonth() + 1).padStart(2, "0");
+  const d = String(transferDate.getDate()).padStart(2, "0");
+  const daysLeft = daysUntil(`${y}-${m}-${d}`);
+
+  return daysLeft <= 0
+    ? '<div class="guild-transfer is-ready">可轉移</div>'
+    : `<div class="guild-transfer">還有 ${daysLeft} 天可轉移</div>`;
+}
+
 function renderGuilds() {
   const items = loadGuilds();
   guildListEl.innerHTML = "";
@@ -1261,6 +1276,7 @@ function renderGuilds() {
           <span>小號加入時間：${item.joined ? formatDate(item.joined) : "未填寫"}</span>
         </div>
       </div>
+      ${guildTransferHtml(item.joined)}
       ${item.landMarked ? '<span class="loot-badge" style="align-self:flex-start">已標土地</span>' : ""}
       <div class="guild-members">${item.members ? escapeHtml(item.members) : "尚未填寫成員名單"}</div>
       <div class="account-actions">
