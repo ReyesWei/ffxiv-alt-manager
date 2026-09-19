@@ -1238,11 +1238,17 @@ function saveGuilds(items) {
   localStorage.setItem(GUILD_KEY, JSON.stringify(items));
 }
 
-function guildTransferHtml(joined) {
-  if (!joined) return "";
-
+function guildTransferDate(joined) {
+  if (!joined) return null;
   const transferDate = new Date(joined + "T00:00:00");
   transferDate.setDate(transferDate.getDate() + 30);
+  return transferDate;
+}
+
+function guildTransferHtml(joined) {
+  const transferDate = guildTransferDate(joined);
+  if (!transferDate) return "";
+
   const y = transferDate.getFullYear();
   const m = String(transferDate.getMonth() + 1).padStart(2, "0");
   const d = String(transferDate.getDate()).padStart(2, "0");
@@ -1264,7 +1270,16 @@ function renderGuilds() {
     return;
   }
 
-  for (const item of items) {
+  const sorted = [...items].sort((a, b) => {
+    const dateA = guildTransferDate(a.joined);
+    const dateB = guildTransferDate(b.joined);
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+    return dateA - dateB;
+  });
+
+  for (const item of sorted) {
     const li = document.createElement("li");
     li.className = "account-card";
     li.innerHTML = `
