@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=38">
+<link rel="stylesheet" href="style.css?v=39">
 </head>
 <body>
 <div id="auth-gate" class="auth-gate">
@@ -325,7 +325,14 @@
       </div>
     </div>
 
-    <div class="field">
+    <div class="field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="guild-joined-same-as-founded">
+        小號加入時間同公會創建日期
+      </label>
+    </div>
+
+    <div class="field" id="guild-joined-field">
       <label for="guild-joined">小號加入時間</label>
       <div class="date-input-row">
         <input type="date" id="guild-joined" min="2020-01-01" max="2099-12-31">
@@ -398,6 +405,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=38"></script>
+<script src="script.js?v=39"></script>
 </body>
 </html>

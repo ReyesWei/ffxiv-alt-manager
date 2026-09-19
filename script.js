@@ -1220,6 +1220,8 @@ const guildMembersInput = document.getElementById("guild-members");
 const guildLevelInput = document.getElementById("guild-level");
 const guildFoundedInput = document.getElementById("guild-founded");
 const guildJoinedInput = document.getElementById("guild-joined");
+const guildJoinedField = document.getElementById("guild-joined-field");
+const guildJoinedSameCheckbox = document.getElementById("guild-joined-same-as-founded");
 const guildLandMarkedInput = document.getElementById("guild-land-marked");
 const openAddGuildBtn = document.getElementById("open-add-guild");
 const closeGuildDialogBtn = document.getElementById("close-guild-dialog");
@@ -1244,11 +1246,13 @@ function guildTransferHtml(joined) {
   const y = transferDate.getFullYear();
   const m = String(transferDate.getMonth() + 1).padStart(2, "0");
   const d = String(transferDate.getDate()).padStart(2, "0");
-  const daysLeft = daysUntil(`${y}-${m}-${d}`);
+  const transferDateStr = `${y}-${m}-${d}`;
+  const daysLeft = daysUntil(transferDateStr);
+  const transferDateLabel = formatDate(transferDateStr);
 
   return daysLeft <= 0
-    ? '<div class="guild-transfer is-ready">可轉移</div>'
-    : `<div class="guild-transfer">還有 ${daysLeft} 天可轉移</div>`;
+    ? `<div class="guild-transfer is-ready">於${transferDateLabel}可轉移，已可轉移</div>`
+    : `<div class="guild-transfer">於${transferDateLabel}可轉移，還有${daysLeft}天</div>`;
 }
 
 function renderGuilds() {
@@ -1290,6 +1294,7 @@ function renderGuilds() {
 
 function resetGuildForm() {
   guildForm.reset();
+  guildJoinedField.classList.remove("is-hidden");
   editingGuildId = null;
   guildDialogTitle.textContent = "新增公會";
   guildForm.querySelector(".btn-primary").textContent = "新增公會";
@@ -1304,6 +1309,21 @@ closeGuildDialogBtn.addEventListener("click", () => {
   guildDialog.close();
 });
 
+guildJoinedSameCheckbox.addEventListener("change", () => {
+  if (guildJoinedSameCheckbox.checked) {
+    guildJoinedInput.value = guildFoundedInput.value;
+    guildJoinedField.classList.add("is-hidden");
+  } else {
+    guildJoinedField.classList.remove("is-hidden");
+  }
+});
+
+guildFoundedInput.addEventListener("change", () => {
+  if (guildJoinedSameCheckbox.checked) {
+    guildJoinedInput.value = guildFoundedInput.value;
+  }
+});
+
 guildForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -1311,7 +1331,7 @@ guildForm.addEventListener("submit", (e) => {
   const members = guildMembersInput.value.trim();
   const level = guildLevelInput.value === "" ? null : Math.max(0, Math.floor(Number(guildLevelInput.value)));
   const founded = guildFoundedInput.value;
-  const joined = guildJoinedInput.value;
+  const joined = guildJoinedSameCheckbox.checked ? founded : guildJoinedInput.value;
   const landMarked = guildLandMarkedInput.checked;
 
   if (!leader) return;
@@ -1345,7 +1365,10 @@ guildListEl.addEventListener("click", (e) => {
     guildMembersInput.value = item.members || "";
     guildLevelInput.value = item.level ?? "";
     guildFoundedInput.value = item.founded || "";
+    const isJoinedSame = Boolean(item.founded) && item.joined === item.founded;
+    guildJoinedSameCheckbox.checked = isJoinedSame;
     guildJoinedInput.value = item.joined || "";
+    guildJoinedField.classList.toggle("is-hidden", isJoinedSame);
     guildLandMarkedInput.checked = Boolean(item.landMarked);
     guildDialog.showModal();
     return;

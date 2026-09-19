@@ -427,7 +427,8 @@ dialog {
   height: 22px;
 }
 
-#employee-expiry-field.is-hidden {
+#employee-expiry-field.is-hidden,
+#guild-joined-field.is-hidden {
   display: none;
 }
 
@@ -839,7 +840,7 @@ dialog {
 }
 
 .guild-transfer {
-  font-size: 0.975rem;
+  font-size: 1.225rem;
   font-weight: 600;
   color: #c4c6d4;
 }
