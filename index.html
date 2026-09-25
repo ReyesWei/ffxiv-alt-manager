@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=39">
+<link rel="stylesheet" href="style.css?v=40">
 </head>
 <body>
 <div id="auth-gate" class="auth-gate">
@@ -130,6 +130,13 @@
         <button type="button" id="open-add-guild" class="btn-primary btn-add btn-block">＋ 新增公會</button>
         <ul id="guild-list" class="account-list"></ul>
       </div>
+    </div>
+
+    <div class="accordion">
+      <button type="button" class="accordion-header" id="open-lottery-calendar">
+        <span>抽選期日曆</span>
+        <span class="accordion-caret">📅</span>
+      </button>
     </div>
   </aside>
 
@@ -351,6 +358,32 @@
   </form>
 </dialog>
 
+<dialog id="lottery-calendar-dialog">
+  <div class="form-card">
+    <div class="dialog-header">
+      <h2>抽選期日曆</h2>
+      <button type="button" id="close-lottery-calendar-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="calendar-header">
+      <button type="button" id="lottery-calendar-prev" class="btn-icon" aria-label="上個月">‹</button>
+      <span id="lottery-calendar-label" class="calendar-label"></span>
+      <button type="button" id="lottery-calendar-next" class="btn-icon" aria-label="下個月">›</button>
+    </div>
+
+    <div class="calendar-weekdays">
+      <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+    </div>
+
+    <div id="lottery-calendar-grid" class="calendar-grid"></div>
+
+    <div class="calendar-legend">
+      <span class="calendar-legend-item"><span class="calendar-legend-swatch is-lottery"></span>抽選期</span>
+      <span class="calendar-legend-item"><span class="calendar-legend-swatch is-announce"></span>公告期</span>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="data-info-dialog">
   <div class="form-card">
     <div class="dialog-header">
@@ -405,6 +438,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=40"></script>
+<script src="script.js?v=41"></script>
 </body>
 </html>

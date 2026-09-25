@@ -1399,4 +1399,86 @@ guildListEl.addEventListener("click", (e) => {
 
 renderGuilds();
 
+/* ---------- Lottery calendar (抽選期/公告期) ---------- */
+
+// Anchor: the start of a known 抽選期 (5-day lottery window), derived from
+// "2026/09/28 is the last day of a 公告期" (4-day announcement window).
+const LOTTERY_CYCLE_ANCHOR = new Date(2026, 8, 20);
+const LOTTERY_PHASE_DAYS = 5;
+const ANNOUNCE_PHASE_DAYS = 4;
+const LOTTERY_CYCLE_DAYS = LOTTERY_PHASE_DAYS + ANNOUNCE_PHASE_DAYS;
+
+function lotteryPhaseFor(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const diffDays = Math.round((d - LOTTERY_CYCLE_ANCHOR) / (1000 * 60 * 60 * 24));
+  const m = ((diffDays % LOTTERY_CYCLE_DAYS) + LOTTERY_CYCLE_DAYS) % LOTTERY_CYCLE_DAYS;
+  return m < LOTTERY_PHASE_DAYS ? "lottery" : "announce";
+}
+
+const lotteryCalendarDialog = document.getElementById("lottery-calendar-dialog");
+const closeLotteryCalendarBtn = document.getElementById("close-lottery-calendar-dialog");
+const openLotteryCalendarBtn = document.getElementById("open-lottery-calendar");
+const lotteryCalendarGrid = document.getElementById("lottery-calendar-grid");
+const lotteryCalendarLabel = document.getElementById("lottery-calendar-label");
+const lotteryCalendarPrevBtn = document.getElementById("lottery-calendar-prev");
+const lotteryCalendarNextBtn = document.getElementById("lottery-calendar-next");
+
+let lotteryCalendarViewDate = new Date();
+
+function renderLotteryCalendar() {
+  const year = lotteryCalendarViewDate.getFullYear();
+  const month = lotteryCalendarViewDate.getMonth();
+  lotteryCalendarLabel.textContent = `${year}年${month + 1}月`;
+
+  const startWeekday = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+
+  let html = "";
+  for (let i = 0; i < startWeekday; i++) {
+    html += '<div class="calendar-day is-other-month"></div>';
+  }
+  for (let day = 1; day <= daysInMonth; day++) {
+    const cellDate = new Date(year, month, day);
+    const phase = lotteryPhaseFor(cellDate);
+    const phaseClass = phase === "lottery" ? "is-lottery" : "is-announce";
+    const phaseLabel = phase === "lottery" ? "抽" : "公";
+    const isToday =
+      cellDate.getFullYear() === today.getFullYear() &&
+      cellDate.getMonth() === today.getMonth() &&
+      cellDate.getDate() === today.getDate();
+    html += `<div class="calendar-day ${phaseClass}${isToday ? " is-today" : ""}">
+      <span class="calendar-day-num">${day}</span>
+      <span class="calendar-day-phase">${phaseLabel}</span>
+    </div>`;
+  }
+  const trailing = (7 - ((startWeekday + daysInMonth) % 7)) % 7;
+  for (let i = 0; i < trailing; i++) {
+    html += '<div class="calendar-day is-other-month"></div>';
+  }
+
+  lotteryCalendarGrid.innerHTML = html;
+}
+
+openLotteryCalendarBtn.addEventListener("click", () => {
+  lotteryCalendarViewDate = new Date();
+  lotteryCalendarViewDate.setDate(1);
+  renderLotteryCalendar();
+  lotteryCalendarDialog.showModal();
+});
+
+closeLotteryCalendarBtn.addEventListener("click", () => {
+  lotteryCalendarDialog.close();
+});
+
+lotteryCalendarPrevBtn.addEventListener("click", () => {
+  lotteryCalendarViewDate.setMonth(lotteryCalendarViewDate.getMonth() - 1);
+  renderLotteryCalendar();
+});
+
+lotteryCalendarNextBtn.addEventListener("click", () => {
+  lotteryCalendarViewDate.setMonth(lotteryCalendarViewDate.getMonth() + 1);
+  renderLotteryCalendar();
+});
+
 addLog("網頁載入");

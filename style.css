@@ -222,7 +222,8 @@ dialog {
 #leveling-dialog,
 #treasure-dialog,
 #farming-dialog,
-#guild-dialog {
+#guild-dialog,
+#lottery-calendar-dialog {
   border: 1px solid #2a2d3a;
   border-radius: 16px;
   background: #1a1d29;
@@ -272,7 +273,8 @@ dialog {
 #leveling-dialog::backdrop,
 #treasure-dialog::backdrop,
 #farming-dialog::backdrop,
-#guild-dialog::backdrop {
+#guild-dialog::backdrop,
+#lottery-calendar-dialog::backdrop {
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -847,4 +849,107 @@ dialog {
 
 .guild-transfer.is-ready {
   color: #4ad07a;
+}
+
+/* Lottery calendar */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendar-header .btn-icon {
+  min-width: 44px;
+  padding: 0;
+  font-size: 1.2rem;
+}
+
+.calendar-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.9rem;
+  color: #9a9db0;
+  margin-bottom: 6px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 0.9rem;
+}
+
+.calendar-day.is-other-month {
+  visibility: hidden;
+}
+
+.calendar-day.is-lottery {
+  background: rgba(91, 141, 239, 0.16);
+  color: #bcd3f9;
+}
+
+.calendar-day.is-announce {
+  background: rgba(224, 197, 106, 0.18);
+  color: #e0c56a;
+}
+
+.calendar-day.is-today {
+  outline: 2px solid #f0f0f5;
+  outline-offset: -2px;
+}
+
+.calendar-day-num {
+  font-weight: 600;
+}
+
+.calendar-day-phase {
+  font-size: 0.7rem;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: #c4c6d4;
+}
+
+.calendar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendar-legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.calendar-legend-swatch.is-lottery {
+  background: #5b8def;
+}
+
+.calendar-legend-swatch.is-announce {
+  background: #e0c56a;
 }
