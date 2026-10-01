@@ -1402,8 +1402,9 @@ renderGuilds();
 /* ---------- Lottery calendar (抽選期/公告期) ---------- */
 
 // Anchor: the start of a known 抽選期 (5-day lottery window), derived from
-// "2026/09/28 is the last day of a 公告期" (4-day announcement window).
-const LOTTERY_CYCLE_ANCHOR = new Date(2026, 8, 20);
+// the confirmed 公告期 of 2026/09/29 - 2026/10/02 (so the preceding 抽選期
+// is 2026/09/24 - 2026/09/28).
+const LOTTERY_CYCLE_ANCHOR = new Date(2026, 8, 24);
 const LOTTERY_PHASE_DAYS = 5;
 const ANNOUNCE_PHASE_DAYS = 4;
 const LOTTERY_CYCLE_DAYS = LOTTERY_PHASE_DAYS + ANNOUNCE_PHASE_DAYS;
