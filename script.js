@@ -316,6 +316,9 @@ const ALL_CATEGORIES = "__all__";
 const categoryDialog = document.getElementById("category-dialog");
 const categoryForm = document.getElementById("category-form");
 const categoryNameInput = document.getElementById("category-name");
+const categoryDialogTitle = document.getElementById("category-dialog-title");
+const categorySubmitBtn = document.getElementById("category-submit-btn");
+let editingCategoryId = null;
 const closeCategoryDialogBtn = document.getElementById("close-category-dialog");
 const categoryPillsEl = document.getElementById("category-pills");
 
@@ -464,7 +467,7 @@ function renderCategoryPills() {
     pill.type = "button";
     pill.className = `category-pill ${cat.id === selectedCategoryId ? "is-active" : ""}`.trim();
     pill.dataset.id = cat.id;
-    pill.innerHTML = `<span>${escapeHtml(cat.name)}</span><span class="remove-category" data-remove-id="${cat.id}">✕</span>`;
+    pill.innerHTML = `<span>${escapeHtml(cat.name)}</span><span class="edit-category" data-edit-id="${cat.id}" title="編輯名稱">✎</span><span class="remove-category" data-remove-id="${cat.id}">✕</span>`;
     categoryPillsEl.appendChild(pill);
   }
 
@@ -615,11 +618,17 @@ categoryForm.addEventListener("submit", (e) => {
   if (!name) return;
 
   const categories = loadCategories();
-  const newCategory = { id: crypto.randomUUID(), name };
-  categories.push(newCategory);
-  saveCategories(categories);
+  if (editingCategoryId) {
+    const target = categories.find((c) => c.id === editingCategoryId);
+    if (target) target.name = name;
+    saveCategories(categories);
+  } else {
+    const newCategory = { id: crypto.randomUUID(), name };
+    categories.push(newCategory);
+    saveCategories(categories);
+    selectedCategoryId = newCategory.id;
+  }
 
-  selectedCategoryId = newCategory.id;
   categoryDialog.close();
   categoryForm.reset();
   renderCategoryPills();
@@ -628,7 +637,23 @@ categoryForm.addEventListener("submit", (e) => {
 categoryPillsEl.addEventListener("click", (e) => {
   const addBtn = e.target.closest('[data-action="add-category"]');
   if (addBtn) {
+    editingCategoryId = null;
+    categoryDialogTitle.textContent = "新增分類";
+    categorySubmitBtn.textContent = "新增分類";
     categoryForm.reset();
+    categoryDialog.showModal();
+    return;
+  }
+
+  const editBtn = e.target.closest("[data-edit-id]");
+  if (editBtn) {
+    e.stopPropagation();
+    const cat = loadCategories().find((c) => c.id === editBtn.dataset.editId);
+    if (!cat) return;
+    editingCategoryId = cat.id;
+    categoryDialogTitle.textContent = "編輯分類";
+    categorySubmitBtn.textContent = "儲存";
+    categoryNameInput.value = cat.name;
     categoryDialog.showModal();
     return;
   }

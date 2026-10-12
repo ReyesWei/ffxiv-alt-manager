@@ -607,7 +607,8 @@ dialog {
   color: #9a9db0;
 }
 
-.category-pill .remove-category {
+.category-pill .remove-category,
+.category-pill .edit-category {
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=40">
+<link rel="stylesheet" href="style.css?v=41">
 </head>
 <body>
 <div id="auth-gate" class="auth-gate">
@@ -197,7 +197,7 @@
 <dialog id="category-dialog">
   <form id="category-form" class="form-card">
     <div class="dialog-header">
-      <h2>新增分類</h2>
+      <h2 id="category-dialog-title">新增分類</h2>
       <button type="button" id="close-category-dialog" class="btn-icon" aria-label="關閉">✕</button>
     </div>
 
@@ -206,7 +206,7 @@
       <input type="text" id="category-name" placeholder="例如：小號A" required>
     </div>
 
-    <button type="submit" class="btn-primary">新增分類</button>
+    <button type="submit" class="btn-primary" id="category-submit-btn">新增分類</button>
   </form>
 </dialog>
 
@@ -438,6 +438,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=42"></script>
+<script src="script.js?v=43"></script>
 </body>
 </html>
