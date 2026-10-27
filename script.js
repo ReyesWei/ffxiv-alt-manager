@@ -642,6 +642,7 @@ categoryPillsEl.addEventListener("click", (e) => {
     categorySubmitBtn.textContent = "新增分類";
     categoryForm.reset();
     categoryDialog.showModal();
+    categoryNameInput.focus();
     return;
   }
 
@@ -655,6 +656,7 @@ categoryPillsEl.addEventListener("click", (e) => {
     categorySubmitBtn.textContent = "儲存";
     categoryNameInput.value = cat.name;
     categoryDialog.showModal();
+    categoryNameInput.focus();
     return;
   }
 
