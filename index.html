@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FFXIV 多帳號管理小工具</title>
-<link rel="stylesheet" href="style.css?v=41">
+<link rel="stylesheet" href="style.css?v=42">
 </head>
 <body>
 <div id="auth-gate" class="auth-gate">
@@ -118,6 +118,17 @@
       <div class="accordion-body is-collapsed" id="farming-accordion-body">
         <button type="button" id="open-add-farming" class="btn-primary btn-add btn-block">＋ 新增角色</button>
         <ul id="farming-list" class="account-list"></ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button type="button" class="accordion-header" id="leve-accordion-toggle">
+        <span>理符次數</span>
+        <span class="accordion-caret">▾</span>
+      </button>
+      <div class="accordion-body is-collapsed" id="leve-accordion-body">
+        <button type="button" id="open-add-leve" class="btn-primary btn-add btn-block">＋ 新增角色</button>
+        <ul id="leve-list" class="account-list"></ul>
       </div>
     </div>
 
@@ -302,6 +313,27 @@
   </form>
 </dialog>
 
+<dialog id="leve-dialog">
+  <form id="leve-form" class="form-card">
+    <div class="dialog-header">
+      <h2 id="leve-dialog-title">新增角色</h2>
+      <button type="button" id="close-leve-dialog" class="btn-icon" aria-label="關閉">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="leve-name">角色名稱</label>
+      <input type="text" id="leve-name" placeholder="例如：小號A" required>
+    </div>
+
+    <div class="field">
+      <label for="leve-count">理符次數（上限 100）</label>
+      <input type="number" id="leve-count" min="0" max="100" step="1" value="0" placeholder="預設 0">
+    </div>
+
+    <button type="submit" class="btn-primary">新增</button>
+  </form>
+</dialog>
+
 <dialog id="guild-dialog">
   <form id="guild-form" class="form-card">
     <div class="dialog-header">
@@ -438,6 +470,6 @@
   </div>
 </dialog>
 
-<script src="script.js?v=44"></script>
+<script src="script.js?v=45"></script>
 </body>
 </html>

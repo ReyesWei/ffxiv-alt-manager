@@ -1233,6 +1233,220 @@ farmingListEl.addEventListener("click", (e) => {
 
 renderFarming();
 
+/* ---------- Leve allowances (理符次數) ---------- */
+
+const LEVE_KEY = "ffxiv-leves";
+const LEVE_CAP = 100;
+const LEVE_GAIN = 3;
+const LEVE_TICK_HOURS = [8, 20];
+
+setupAccordion("leve-accordion-toggle", "leve-accordion-body");
+
+const leveDialog = document.getElementById("leve-dialog");
+const leveDialogTitle = document.getElementById("leve-dialog-title");
+const leveForm = document.getElementById("leve-form");
+const leveNameInput = document.getElementById("leve-name");
+const leveCountInput = document.getElementById("leve-count");
+const openAddLeveBtn = document.getElementById("open-add-leve");
+const closeLeveDialogBtn = document.getElementById("close-leve-dialog");
+const leveListEl = document.getElementById("leve-list");
+
+let editingLeveId = null;
+
+function loadLeves() {
+  const raw = localStorage.getItem(LEVE_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveLeves(items) {
+  localStorage.setItem(LEVE_KEY, JSON.stringify(items));
+}
+
+// Counts the 08:00 / 20:00 (local time) boundaries in (fromMs, toMs].
+// Stops early at maxTicks so very stale data stays cheap to compute.
+function leveTicksBetween(fromMs, toMs, maxTicks) {
+  if (toMs <= fromMs || maxTicks <= 0) return 0;
+  let count = 0;
+  const day = new Date(fromMs);
+  day.setHours(0, 0, 0, 0);
+  while (day.getTime() <= toMs && count < maxTicks) {
+    for (const hour of LEVE_TICK_HOURS) {
+      const t = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour).getTime();
+      if (t > fromMs && t <= toMs) count++;
+    }
+    day.setDate(day.getDate() + 1);
+  }
+  return count;
+}
+
+// The stored count is a snapshot taken at updatedAt; the live value is
+// derived from it, so allowances earned while the page was closed are
+// still credited the next time it opens.
+function leveCurrentCount(item, nowMs) {
+  if (item.count >= LEVE_CAP) return LEVE_CAP;
+  const maxTicks = Math.ceil((LEVE_CAP - item.count) / LEVE_GAIN);
+  const ticks = leveTicksBetween(item.updatedAt, nowMs, maxTicks);
+  return Math.min(LEVE_CAP, item.count + LEVE_GAIN * ticks);
+}
+
+function leveNextTickMs(nowMs) {
+  const day = new Date(nowMs);
+  day.setHours(0, 0, 0, 0);
+  for (let i = 0; i < 2; i++) {
+    for (const hour of LEVE_TICK_HOURS) {
+      const t = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour).getTime();
+      if (t > nowMs) return t;
+    }
+    day.setDate(day.getDate() + 1);
+  }
+  return null;
+}
+
+function formatLeveNext(nextMs, nowMs) {
+  const next = new Date(nextMs);
+  const today = new Date(nowMs);
+  const sameDay = next.toDateString() === today.toDateString();
+  const hh = String(next.getHours()).padStart(2, "0");
+  const mm = String(next.getMinutes()).padStart(2, "0");
+  const totalMinutes = Math.max(0, Math.ceil((nextMs - nowMs) / 60000));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  const remain = hours > 0 ? `${hours}小時${minutes}分` : `${minutes}分`;
+  return `下次 +${LEVE_GAIN}：${sameDay ? "今天" : "明天"} ${hh}:${mm}（還有 ${remain}）`;
+}
+
+function renderLeves() {
+  const items = loadLeves();
+  leveListEl.innerHTML = "";
+
+  if (items.length === 0) {
+    leveListEl.innerHTML = '<li class="empty-state">還沒有角色資料，新增一筆看看吧</li>';
+    return;
+  }
+
+  for (const item of items) {
+    const li = document.createElement("li");
+    li.className = "submarine-card";
+    li.dataset.id = item.id;
+    li.dataset.count = item.count;
+    li.dataset.updatedAt = item.updatedAt;
+    li.innerHTML = `
+      <div class="submarine-card-header">
+        <span class="submarine-name">${escapeHtml(item.name)}</span>
+        <span class="submarine-status">累計中</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+      <div class="submarine-countdown"></div>
+      <div class="leve-next"></div>
+      <div class="footer-btn-group">
+        <button class="btn-icon" data-action="edit-leve" data-id="${item.id}">編輯</button>
+        <button class="btn-icon" data-action="reset-leve" data-id="${item.id}">刷新</button>
+        <button class="btn-icon danger" data-action="delete-leve" data-id="${item.id}">刪除</button>
+      </div>
+    `;
+    leveListEl.appendChild(li);
+  }
+
+  tickLeves();
+}
+
+function tickLeves() {
+  const now = Date.now();
+  document.querySelectorAll("#leve-list .submarine-card").forEach((card) => {
+    const item = { count: Number(card.dataset.count), updatedAt: Number(card.dataset.updatedAt) };
+    const current = leveCurrentCount(item, now);
+    const full = current >= LEVE_CAP;
+
+    card.querySelector(".submarine-countdown").textContent = `理符 ${current} / ${LEVE_CAP}`;
+    card.querySelector(".progress-fill").style.width = `${(current / LEVE_CAP) * 100}%`;
+    card.querySelector(".submarine-status").textContent = full ? "已達上限" : "累計中";
+    card.querySelector(".leve-next").textContent = full
+      ? "已達上限，不會再增加"
+      : formatLeveNext(leveNextTickMs(now), now);
+    card.classList.toggle("is-arrived", full);
+  });
+}
+
+setInterval(tickLeves, 1000);
+
+openAddLeveBtn.addEventListener("click", () => {
+  editingLeveId = null;
+  leveDialogTitle.textContent = "新增角色";
+  leveForm.querySelector(".btn-primary").textContent = "新增";
+  leveForm.reset();
+  leveDialog.showModal();
+  leveNameInput.focus();
+});
+
+closeLeveDialogBtn.addEventListener("click", () => {
+  leveDialog.close();
+});
+
+leveForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = leveNameInput.value.trim();
+  if (!name) return;
+
+  const raw = leveCountInput.value === "" ? 0 : Math.floor(Number(leveCountInput.value));
+  const count = Math.min(LEVE_CAP, Math.max(0, Number.isFinite(raw) ? raw : 0));
+
+  const items = loadLeves();
+
+  if (editingLeveId) {
+    const item = items.find((i) => i.id === editingLeveId);
+    if (item) {
+      item.name = name;
+      item.count = count;
+      item.updatedAt = Date.now();
+    }
+  } else {
+    items.push({ id: crypto.randomUUID(), name, count, updatedAt: Date.now() });
+  }
+  saveLeves(items);
+
+  leveDialog.close();
+  leveForm.reset();
+  renderLeves();
+});
+
+leveListEl.addEventListener("click", (e) => {
+  const editBtn = e.target.closest('button[data-action="edit-leve"]');
+  if (editBtn) {
+    const item = loadLeves().find((i) => i.id === editBtn.dataset.id);
+    if (!item) return;
+    editingLeveId = item.id;
+    leveDialogTitle.textContent = "編輯角色";
+    leveForm.querySelector(".btn-primary").textContent = "儲存";
+    leveNameInput.value = item.name;
+    leveCountInput.value = leveCurrentCount(item, Date.now());
+    leveDialog.showModal();
+    leveNameInput.focus();
+    return;
+  }
+
+  const resetBtn = e.target.closest('button[data-action="reset-leve"]');
+  if (resetBtn) {
+    const items = loadLeves();
+    const item = items.find((i) => i.id === resetBtn.dataset.id);
+    if (item) {
+      item.count = 0;
+      item.updatedAt = Date.now();
+      saveLeves(items);
+      renderLeves();
+    }
+    return;
+  }
+
+  const deleteBtn = e.target.closest('button[data-action="delete-leve"]');
+  if (deleteBtn) {
+    if (!confirm("確定要刪除這個角色的理符次數嗎？")) return;
+    saveLeves(loadLeves().filter((i) => i.id !== deleteBtn.dataset.id));
+    renderLeves();
+  }
+});
+
+renderLeves();
+
 /* ---------- Guilds (公會資訊) ---------- */
 
 const GUILD_KEY = "ffxiv-guilds";
