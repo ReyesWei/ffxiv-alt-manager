@@ -1238,6 +1238,7 @@ renderFarming();
 const LEVE_KEY = "ffxiv-leves";
 const LEVE_CAP = 100;
 const LEVE_GAIN = 3;
+const LEVE_GREEN_ABOVE = 80;
 const LEVE_TICK_HOURS = [8, 20];
 
 setupAccordion("leve-accordion-toggle", "leve-accordion-body");
@@ -1363,7 +1364,7 @@ function tickLeves() {
     card.querySelector(".leve-next").textContent = full
       ? "已達上限，不會再增加"
       : formatLeveNext(leveNextTickMs(now), now);
-    card.classList.toggle("is-arrived", full);
+    card.classList.toggle("is-arrived", current > LEVE_GREEN_ABOVE);
   });
 }
 
